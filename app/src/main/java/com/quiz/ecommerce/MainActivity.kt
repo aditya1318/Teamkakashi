@@ -3,6 +3,7 @@ package com.quiz.ecommerce
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -11,15 +12,21 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNavigationView: BottomNavigationView;
     lateinit var fab:FloatingActionButton;
     lateinit var bottomAppBar:BottomAppBar;
+    lateinit var mAuthListener: FirebaseAuth.AuthStateListener;
+
+    lateinit var navController:NavController;
+    val firebaseAuth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navController = findNavController(R.id.fragment)
+         navController = findNavController(R.id.fragment)
 
         fab=findViewById(R.id.fab)
         bottomAppBar=findViewById(R.id.bottomAppBar)
@@ -61,6 +68,13 @@ bottomNavigationView =findViewById(R.id.bottomNavigationView)
                 else -> hideBottomNav()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+
+
     }
 
     private fun hideTitleBar() {

@@ -18,6 +18,8 @@ import com.google.firebase.firestore.Query
 import com.quiz.Model.Product_model
 import com.quiz.ProductClickListener
 import com.quiz.adapter.ProductAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 
 
 class HomeFragment : Fragment(),ProductClickListener {
@@ -50,16 +52,7 @@ val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         recyclerView= view.findViewById<RecyclerView>(R.id.Rcview1)
 
-        db.collection("Products")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
+
 
 
 
@@ -67,6 +60,7 @@ val view = inflater.inflate(R.layout.fragment_home, container, false)
         return view;
     }
 fun setUpRecyclerView(){
+
     val query :Query =FirebaseFirestore.getInstance().collection("Products").orderBy("product_name", Query.Direction.ASCENDING);
     val options = FirestoreRecyclerOptions.Builder<Product_model>()
 
