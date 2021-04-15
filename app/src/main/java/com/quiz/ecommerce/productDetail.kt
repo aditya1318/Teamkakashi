@@ -23,7 +23,7 @@ import kotlinx.coroutines.tasks.await
 
 class productDetail : Fragment() {
 
-    lateinit var productdetail: productDetail
+   // lateinit var productdetail: productDetail
     val mFireStore = FirebaseFirestore.getInstance()
 
 
@@ -44,17 +44,17 @@ val view =inflater.inflate(R.layout.fragment_product_detail, container, false)
              Log.d("problem","message fuck")
 
           }*/
-            view.findViewById<Button>(R.id.product_detail_buy_btn).setOnClickListener { view ->
-                Log.d("btnSetup", "Selected")
-                Toast.makeText(activity,"button,",Toast.LENGTH_LONG).show();
 
-                var product_model : Product_model = Product_model("",
-                    "","","")
-                addCartItems(productdetail,product_model )
-            }
         }
 
+        view.findViewById<Button>(R.id.product_detail_buy_btn).setOnClickListener { view ->
+            Log.d("btnSetup", "Selected")
+            Toast.makeText(activity,"button,",Toast.LENGTH_LONG).show();
 
+            var product_model : Product_model = Product_model("",
+                    "","","")
+            addCartItems(activity =  productDetail(),product_model )
+        }
 
 
         return view
