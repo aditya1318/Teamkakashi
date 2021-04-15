@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "602966625503",
+    "project_id": "ecommerce-54e3d",
+    "storage_bucket": "ecommerce-54e3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602966625503:android:3f2b5c67f0674fecafad6a",
+        "android_client_info": {
+          "package_name": "com.quiz.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602966625503-g8rua3u0k292ula2rp111lo8qkd6qq9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWwpbGBEKNUZmeaMVSh_9VyhJLJ3kBcoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602966625503-g8rua3u0k292ula2rp111lo8qkd6qq9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

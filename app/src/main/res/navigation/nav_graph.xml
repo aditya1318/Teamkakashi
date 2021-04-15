@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startPage">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.quiz.ecommerce.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_cartFragment2"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_productDetail"
+            app:destination="@id/productDetail" />
+        <action
+            android:id="@+id/action_homeFragment_to_setting"
+            app:destination="@id/SettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.quiz.ecommerce.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_cartFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+           />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/register"
+        android:name="com.quiz.ecommerce.Register"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/login" />
+        <action
+            android:id="@+id/action_register_to_startPage"
+            app:destination="@id/startPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/login"
+        android:name="com.quiz.ecommerce.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register" />
+    </fragment>
+    <fragment
+        android:id="@+id/startPage"
+        android:name="com.quiz.ecommerce.StartPage"
+        android:label="fragment_start_page"
+        tools:layout="@layout/fragment_start_page" >
+        <action
+            android:id="@+id/action_startPage_to_login"
+            app:destination="@id/login" />
+        <action
+            android:id="@+id/action_startPage_to_register"
+            app:destination="@id/register" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetail"
+        android:name="com.quiz.ecommerce.productDetail"
+        android:label="fragment_product_detail"
+        tools:layout="@layout/fragment_product_detail"
+        />
+    <fragment
+        android:id="@+id/SettingFragment"
+        android:name="com.quiz.ecommerce.Setting"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+
+    </fragment>
+</navigation>
