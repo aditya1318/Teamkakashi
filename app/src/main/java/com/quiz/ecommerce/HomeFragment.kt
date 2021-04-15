@@ -68,7 +68,7 @@ fun setUpRecyclerView(){
         .build();
     adapter = ProductAdapter(options,this)
 
-    recyclerView.setAdapter(adapter);
+//    recyclerView.setAdapter(adapter);
 recyclerView.layoutManager = LinearLayoutManager(activity)
     recyclerView.adapter = adapter;
 

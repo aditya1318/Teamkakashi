@@ -37,7 +37,7 @@ class Setting : Fragment() {
 
         val view =inflater.inflate(R.layout.fragment_setting, container, false)
 
-        view.findViewById<ImageView>(R.id.SettingBackBtn).setOnClickListener{
+        view.findViewById<ImageView>(R.id.cart_image).setOnClickListener{
             it.findNavController().navigate(R.id.homeFragment)
         }
         return view

@@ -76,6 +76,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 def lifecycle_version = "2.3.1"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -93,6 +94,7 @@ def lifecycle_version = "2.3.1"
 
     implementation "com.google.firebase:firebase-firestore:22.1.2"
     implementation "com.firebaseui:firebase-ui-auth:3.0.0"
+
 
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
     api 'com.google.android.material:material:1.4.0-alpha02'
