@@ -1,4 +1,4 @@
-package com.quiz.Model
+package com.quiz.repo.Model
 
 data class Product_model(
         val product_image : String? =null,

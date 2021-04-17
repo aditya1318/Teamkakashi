@@ -1,4 +1,4 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.quiz.ecommerce.R
 
 
 class Login : Fragment() {

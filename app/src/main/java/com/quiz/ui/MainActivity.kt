@@ -1,32 +1,24 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseAuth
+import com.quiz.ecommerce.R
 
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNavigationView: BottomNavigationView;
     lateinit var fab:FloatingActionButton;
     lateinit var bottomAppBar:BottomAppBar;
-    lateinit var mAuthListener: FirebaseAuth.AuthStateListener;
-
-    lateinit var navController:NavController;
-    val firebaseAuth = FirebaseAuth.getInstance()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-         navController = findNavController(R.id.fragment)
+        val navController = findNavController(R.id.fragment)
 
         fab=findViewById(R.id.fab)
         bottomAppBar=findViewById(R.id.bottomAppBar)
@@ -61,20 +53,13 @@ bottomNavigationView =findViewById(R.id.bottomNavigationView)
                 R.id.startPage ->
                 {hideTitleBar()
                     hideBottomNav()}
-                R.id.login->{hideTitleBar()
+                R.id.login ->{hideTitleBar()
                     hideBottomNav()}
-                R.id.register->{hideTitleBar()
+                R.id.register ->{hideTitleBar()
                     hideBottomNav()}
                 else -> hideBottomNav()
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-
-
     }
 
     private fun hideTitleBar() {
