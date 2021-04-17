@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.quiz.Model.User
 import com.quiz.UseCases.UserDetailImpli
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -120,7 +121,7 @@ class Register : Fragment() {
                                 )
                                 // Pass the required values in the constructor.
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    UserDetailImpli().createUserDetail(this@Register, user)
+                                    UserDetailImpli().createUserDetail(, user)
                                 }
                                 try {
                                     v.findNavController().navigate(R.id.action_register_to_login)
