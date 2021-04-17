@@ -1,4 +1,4 @@
-package com.quiz.adapter
+package com.quiz.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.card.MaterialCardView
-import com.quiz.Model.Product_model
+import com.quiz.repo.Model.Product_model
 import com.quiz.ProductClickListener
 import com.quiz.ecommerce.R
 

@@ -1,4 +1,4 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -16,8 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.quiz.Model.User
-import kotlinx.android.synthetic.main.fragment_login.*
+import com.quiz.repo.Model.User
+import com.quiz.ecommerce.R
 import kotlinx.android.synthetic.main.fragment_register.*
 import java.lang.Exception
 

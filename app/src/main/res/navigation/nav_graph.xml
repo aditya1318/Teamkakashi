@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.quiz.ecommerce.HomeFragment"
+        android:name="com.quiz.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.quiz.ecommerce.CartFragment"
+        android:name="com.quiz.ui.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" >
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/register"
-        android:name="com.quiz.ecommerce.Register"
+        android:name="com.quiz.ui.Register"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/login"
-        android:name="com.quiz.ecommerce.Login"
+        android:name="com.quiz.ui.Login"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/startPage"
-        android:name="com.quiz.ecommerce.StartPage"
+        android:name="com.quiz.ui.StartPage"
         android:label="fragment_start_page"
         tools:layout="@layout/fragment_start_page" >
         <action
@@ -71,13 +71,13 @@
     </fragment>
     <fragment
         android:id="@+id/productDetail"
-        android:name="com.quiz.ecommerce.productDetail"
+        android:name="com.quiz.ui.productDetail"
         android:label="fragment_product_detail"
         tools:layout="@layout/fragment_product_detail"
         />
     <fragment
         android:id="@+id/SettingFragment"
-        android:name="com.quiz.ecommerce.Setting"
+        android:name="com.quiz.ui.Setting"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" >
 

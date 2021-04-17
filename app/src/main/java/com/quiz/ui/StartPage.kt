@@ -1,4 +1,4 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.findNavController
+import com.quiz.ecommerce.R
 
 
 class StartPage : Fragment() {

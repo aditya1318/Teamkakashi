@@ -1,4 +1,4 @@
-package com.quiz.adapter
+package com.quiz.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.card.MaterialCardView
 import com.quiz.Model.Cart_model
 import com.quiz.ecommerce.R
+import kotlinx.coroutines.CompletableDeferred
 
 
 class CartAdapter(options: FirestoreRecyclerOptions<Cart_model>): FirestoreRecyclerAdapter<Cart_model,

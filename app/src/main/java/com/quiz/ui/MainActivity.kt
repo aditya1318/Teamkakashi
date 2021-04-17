@@ -1,16 +1,15 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.quiz.ecommerce.R
 
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNavigationView: BottomNavigationView;
@@ -54,9 +53,9 @@ bottomNavigationView =findViewById(R.id.bottomNavigationView)
                 R.id.startPage ->
                 {hideTitleBar()
                     hideBottomNav()}
-                R.id.login->{hideTitleBar()
+                R.id.login ->{hideTitleBar()
                     hideBottomNav()}
-                R.id.register->{hideTitleBar()
+                R.id.register ->{hideTitleBar()
                     hideBottomNav()}
                 else -> hideBottomNav()
             }

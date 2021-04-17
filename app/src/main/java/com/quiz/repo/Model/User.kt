@@ -1,4 +1,4 @@
-package com.quiz.Model
+package com.quiz.repo.Model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

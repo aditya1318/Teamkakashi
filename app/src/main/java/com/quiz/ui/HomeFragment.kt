@@ -1,4 +1,4 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -15,9 +15,10 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.quiz.Model.Product_model
+import com.quiz.repo.Model.Product_model
 import com.quiz.ProductClickListener
-import com.quiz.adapter.ProductAdapter
+import com.quiz.ui.adapter.ProductAdapter
+import com.quiz.ecommerce.R
 
 
 class HomeFragment : Fragment(),ProductClickListener {

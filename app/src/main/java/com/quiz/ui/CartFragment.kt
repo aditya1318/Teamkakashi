@@ -1,36 +1,42 @@
-package com.quiz.ecommerce
+package com.quiz.ui
 
-import android.graphics.Color
 import android.os.Bundle
-import androidx.transition.Slide
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.databinding.DataBindingUtil.setContentView
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.android.material.transition.MaterialContainerTransform
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
 import com.quiz.Model.Cart_model
-import com.quiz.adapter.CartAdapter
+import com.quiz.ui.adapter.CartAdapter
+import com.quiz.ecommerce.R
+import com.quiz.repo.repository
+import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class CartFragment : Fragment() {
     lateinit var cartFragment: CartFragment
     private lateinit var adapter: CartAdapter;
     lateinit var recyclerView: RecyclerView
+    lateinit var vm: Viewmodel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        vm = activity?.let {
+            ViewModelProviders.of(it)[Viewmodel::class.java]
+        } ?: throw Exception("Activity is null")
 
     }
 
@@ -66,7 +72,9 @@ class CartFragment : Fragment() {
     }
 
 
-    fun setUpRecyclerView() {
+
+    fun setUpRecyclerView(){
+
         val query: Query =
             FirebaseFirestore.getInstance().collection("Cart")
                 .orderBy("product_rate", Query.Direction.ASCENDING)
@@ -78,10 +86,9 @@ class CartFragment : Fragment() {
 
         recyclerView.adapter = adapter;
         recyclerView.layoutManager = LinearLayoutManager(activity)
+
+
     }
-
-
-
 }
 
 
