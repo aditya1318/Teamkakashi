@@ -28,20 +28,6 @@ class repository  {
     }
 
 
-    suspend fun  getproductList(): FirestoreRecyclerOptions<Cart_model> {
 
-        val query: Query =
-            FirebaseFirestore.getInstance()
-                .collection("Cart")
-                .orderBy("product_rate", Query.Direction.ASCENDING)
-
-        val options = FirestoreRecyclerOptions.Builder<Cart_model>()
-            .setQuery(query, Cart_model::class.java)
-            .build()
-
-
-        return  options
-
-    }
 
 }
