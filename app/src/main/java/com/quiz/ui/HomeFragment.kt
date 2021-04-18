@@ -57,6 +57,16 @@ class HomeFragment : Fragment(), ProductClickListener {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+    /*    db.collection("Products")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }*/
         recyclerView = view.findViewById<RecyclerView>(R.id.Rcview1)
 
         return view;
