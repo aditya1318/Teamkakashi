@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    android:fitsSystemWindows="true"
-    tools:context="com.quiz.ui.productDetail"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.quiz.ui.productDetail">
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -34,7 +33,7 @@
                 app:titleEnabled="false">
 
                 <ImageView
-                    android:id="@+id/image"
+                    android:id="@+id/imageprofile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
@@ -54,8 +53,8 @@
             android:id="@+id/nested_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4F6E6A6A"
             android:layout_marginTop="-35dp"
+            android:background="#4F6E6A6A"
             android:clipToPadding="false"
             android:scrollbars="none"
             android:scrollingCache="true"
@@ -92,6 +91,7 @@
                             android:paddingBottom="@dimen/spacing_large">
 
                             <TextView
+                                android:id="@+id/Product_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="?attr/actionBarSize"
                                 android:layout_marginTop="10dp"
@@ -117,6 +117,7 @@
                                     android:layout_height="0dp" />
 
                                 <TextView
+                                    android:id="@+id/product_des"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
@@ -196,6 +197,7 @@
                                     app:layout_constraintTop_toTopOf="parent">
 
                                     <ImageView
+                                        android:id="@+id/counterplus"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"
@@ -203,6 +205,7 @@
 
 
                                     <TextView
+                                        android:id="@+id/countertext"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="2"
@@ -213,29 +216,14 @@
                                         android:textSize="15sp" />
 
                                     <ImageView
+                                        android:id="@+id/counterminus"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"
                                         android:src="@drawable/ic_baseline_add_24" />
 
 
-
                                 </LinearLayout>
-
-
-                                <Button
-                                    android:id="@+id/product_detail_buy_btn"
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_alignParentBottom="true"
-                                    android:background="@drawable/btn"
-
-                                    android:text="Buy"
-                                    android:textSize="18sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
 
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -257,10 +245,10 @@
         <ImageView
             android:id="@+id/productDetailBackBtn"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
-            android:layout_marginStart="20dp"/>
+            android:src="@drawable/ic_baseline_arrow_back_24" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <RelativeLayout
@@ -274,29 +262,46 @@
             android:layout_height="80dp"
             app:cardElevation="5dp"
 
-          >
+            >
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
 
+                <TextView
+                    android:id="@+id/product_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="400$"
+                    android:textColor="@color/btnColor"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/product_detail_buy_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/btn"
+                    android:text="Buy"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-
-            android:text="400$"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:textSize="25sp"
-android:textStyle="bold"
-            android:textColor="@color/btnColor"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
 
 
