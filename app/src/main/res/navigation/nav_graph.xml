@@ -30,6 +30,9 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
            />
+        <action
+            android:id="@+id/action_cartFragment_to_address"
+            app:destination="@id/address" />
 
 
     </fragment>
@@ -87,4 +90,9 @@
         android:name="com.quiz.ecommerce.addressFragment"
         android:label="fragment_address"
         tools:layout="@layout/fragment_address" />
+    <fragment
+        android:id="@+id/address"
+        android:name="com.quiz.ecommerce.address"
+        android:label="fragment_address2"
+        tools:layout="@layout/fragment_address2" />
 </navigation>

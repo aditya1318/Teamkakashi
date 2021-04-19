@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_address"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="30dp"
@@ -46,7 +46,7 @@
         android:layout_marginBottom="30dp"
         android:text="Total"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/btn_address"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -57,7 +57,7 @@
         android:layout_marginBottom="30dp"
         android:text="400$"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/btn_address"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

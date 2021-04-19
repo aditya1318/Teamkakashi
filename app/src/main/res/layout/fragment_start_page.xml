@@ -70,7 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/add_Address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="you don't have an account? "
@@ -88,6 +88,6 @@
         android:textColor="@color/btnColor"
         android:textStyle="bold"
         android:layout_marginTop="30dp"
-        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintStart_toEndOf="@+id/add_Address"
         app:layout_constraintTop_toBottomOf="@+id/StartpageLoginBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
