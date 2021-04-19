@@ -82,4 +82,9 @@
         tools:layout="@layout/fragment_setting" >
 
     </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.quiz.ecommerce.addressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address" />
 </navigation>

@@ -6,22 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.quiz.Model.Cart_model
+import com.quiz.Model.Address
 import com.quiz.ui.adapter.CartAdapter
 import com.quiz.ecommerce.R
-import com.quiz.repo.repository
 import com.quiz.viewmodel.Viewmodel
-import kotlinx.android.synthetic.main.fragment_cart.*
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class CartFragment : Fragment() {
     lateinit var cartFragment: CartFragment
@@ -78,8 +71,8 @@ class CartFragment : Fragment() {
         val query: Query =
             FirebaseFirestore.getInstance().collection("Cart")
                 .orderBy("product_rate", Query.Direction.ASCENDING)
-        val options = FirestoreRecyclerOptions.Builder<Cart_model>()
-            .setQuery(query, Cart_model::class.java)
+        val options = FirestoreRecyclerOptions.Builder<Address>()
+            .setQuery(query, Address::class.java)
             .build();
         adapter = CartAdapter(options)
 

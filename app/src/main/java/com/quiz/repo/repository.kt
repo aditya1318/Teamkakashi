@@ -1,32 +1,22 @@
 package com.quiz.repo
 
 import android.content.ContentValues
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import androidx.navigation.findNavController
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks.await
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
-import com.quiz.Model.Cart_model
+import com.quiz.Model.Address
 import com.quiz.ecommerce.R
-import com.quiz.repo.Model.Product_model
 import com.quiz.repo.Model.User
 import com.quiz.ui.adapter.CartAdapter
-import com.quiz.ui.productDetail
-import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
-import java.util.*
 
 class repository  {
 
@@ -34,7 +24,7 @@ class repository  {
 
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
 
-    suspend fun addCartItems( addToCart: Cart_model)
+    suspend fun addCartItems( addToCart: Address)
     {
         firebaseFirestore.collection("Cart")
 

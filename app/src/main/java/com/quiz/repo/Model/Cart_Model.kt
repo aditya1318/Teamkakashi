@@ -1,6 +1,6 @@
 package com.quiz.Model
 
-data class Cart_model  (
+data class Address  (
 
  //   val product_id: String? = "123",
     val product_image: String? =" ",

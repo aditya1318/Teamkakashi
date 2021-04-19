@@ -10,21 +10,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.quiz.Model.Cart_model
+import com.quiz.Model.Address
 import com.quiz.repo.Model.Product_model
 import com.quiz.ecommerce.R
-import com.quiz.repo.repository
 import com.quiz.viewmodel.Viewmodel
-import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.fragment_product_detail.view.*
-import java.util.List.of
 
 
 class productDetail : Fragment() {
@@ -63,7 +57,7 @@ class productDetail : Fragment() {
         view.findViewById<Button>(R.id.product_detail_buy_btn).setOnClickListener { view ->
             Log.d("btnSetup", "Selected")
             Toast.makeText(activity,"button,",Toast.LENGTH_LONG).show();
-            val cartModel:Cart_model = Cart_model("","","","")
+            val cartModel:Address = Address("","","","")
             vm.addcart(cartModel)
 
         }

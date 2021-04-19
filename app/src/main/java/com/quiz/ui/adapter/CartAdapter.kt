@@ -11,12 +11,11 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.card.MaterialCardView
-import com.quiz.Model.Cart_model
+import com.quiz.Model.Address
 import com.quiz.ecommerce.R
-import kotlinx.coroutines.CompletableDeferred
 
 
-class CartAdapter(options: FirestoreRecyclerOptions<Cart_model>): FirestoreRecyclerAdapter<Cart_model,
+class CartAdapter(options: FirestoreRecyclerOptions<Address>): FirestoreRecyclerAdapter<Address,
         CartAdapter.ViewHolder>(options)  {
 
 
@@ -35,7 +34,7 @@ class CartAdapter(options: FirestoreRecyclerOptions<Cart_model>): FirestoreRecyc
 
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Cart_model) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Address) {
         Log.d("Bind:","Mirage");
         val url: String? = model.product_image;
         Glide.with(holder.Product_name.context)
