@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Product_model
 import com.quiz.repo.repository
@@ -18,6 +19,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val product_id = MutableLiveData<String>()
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
+    val UserId = MutableLiveData<String>()
 
 
     fun addcart(addtocart: Cart_Model) {
@@ -82,6 +84,16 @@ viewModelScope.launch(Dispatchers.IO) {
             repository.removeCartProductById(ID!!)
         }
 
+    }
+
+    fun add_address(address: Address){
+
+        val ID =UserId.value
+        viewModelScope.launch(Dispatchers.IO) {
+
+            repository.add_address(address)
+
+        }
     }
 
 

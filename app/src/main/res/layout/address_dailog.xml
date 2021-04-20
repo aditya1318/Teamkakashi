@@ -84,14 +84,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-
                 android:hint="Flat/House no.,Building, Apartment"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/phone_no" />
 
             <EditText
-                android:id="@+id/Area"
+                android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -108,7 +107,7 @@
                 android:hint="Landmark e.g. near Nirma university"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Area" />
+                app:layout_constraintTop_toBottomOf="@+id/address" />
 
             <EditText
                 android:id="@+id/Pin"

@@ -7,11 +7,21 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProviders
 import com.quiz.ecommerce.R
+import com.quiz.ecommerce.address
+import com.quiz.repo.Model.Address
+import com.quiz.viewmodel.Viewmodel
+import kotlinx.android.synthetic.main.address_dailog.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class Address_Dailog : DialogFragment() {
     private var toolbar: Toolbar? = null
+    lateinit var vm: Viewmodel
+
     companion object{
     const val TAG = "example_dialog"
     fun display(fragmentManager: FragmentManager?): Address_Dailog {
@@ -25,6 +35,12 @@ class Address_Dailog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        vm = activity?.let {
+            ViewModelProviders.of(it)[Viewmodel::class.java]
+        } ?: throw Exception("Activity is null")
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -32,6 +48,16 @@ class Address_Dailog : DialogFragment() {
 
         val view = inflater.inflate(R.layout.address_dailog, container, false)
         toolbar = view.findViewById(R.id.toolbar)
+
+
+        view.save_btn.setOnClickListener {
+
+            val address: Address = Address(view.full_name.text.toString(),view.phone_no.text.toString(),view.address.text.toString(),view.Pin.text.toString(),
+                                            view.Landmark.text.toString(),view.house_no.text.toString())
+
+            vm.add_address(address)
+
+        }
 
 
         return view
@@ -65,6 +91,7 @@ class Address_Dailog : DialogFragment() {
             toolbar?.setTitle("Some Title");
 
         }
+
 
     }
 

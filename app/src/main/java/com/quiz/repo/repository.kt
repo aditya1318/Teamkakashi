@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.quiz.ecommerce.R
+import com.quiz.ecommerce.address
+import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.User
 import com.quiz.ui.adapter.CartAdapter
@@ -21,24 +23,20 @@ import java.lang.Exception
 class repository  {
 
     private lateinit var adapter: CartAdapter;
-    val userID =FirebaseAuth.getInstance().currentUser!!.uid
+    val userID =FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
+
+
 
     suspend fun addCartItems(addToCart: Cart_Model)
     {
 
-        firebaseFirestore.collection("USER").document(userID).collection("Cart")
-                .get().addOnSuccessListener {
-                    for (document in it) {
-                       if(document.id==addToCart.product_id){
 
-                       }
-                    }
-                }
-
-        firebaseFirestore.collection("USER").document(userID)
-                .collection("Cart").document().set(addToCart, SetOptions.merge())
-                .await()
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID)
+                    .collection("Cart").document().set(addToCart, SetOptions.merge())
+                    .await()
+        }
     }
 
 
@@ -62,13 +60,13 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
                     //     FirestoreClass().registerUser(this@RegisterActivity, user)
                     try {
                         firebaseFirestore.collection("USER")
-                            .document().set(user, SetOptions.merge())
-GlobalScope.launch(Dispatchers.IO){
-    withContext(Dispatchers.Main){
-        v.findNavController().navigate(R.id.action_register_to_login)
-    }
+                            .document(user.id).set(user, SetOptions.merge())
+                            GlobalScope.launch(Dispatchers.IO){
+                                withContext(Dispatchers.Main){
+                                   v.findNavController().navigate(R.id.action_register_to_login)
+                    }
 
-}
+                }
 
 
 
@@ -87,62 +85,83 @@ GlobalScope.launch(Dispatchers.IO){
     suspend fun getQuantityById(id:String):Long{
 
         var count:Long?=null;
-        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
-                .get().addOnSuccessListener { it ->
-                    it.forEach{i->
-                                    count = i.get("quantity") as Long?
-                        Log.d(TAG, "getQuantityById: ${count.toString()}")
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                    .get().addOnSuccessListener { it ->
+                        it.forEach{i->
+                            count = i.get("quantity") as Long?
+                            Log.d(TAG, "getQuantityById: ${count.toString()}")
 
-                        Log.d(TAG, "getQuantityById: ${i.getString("product_id").toString()}")
-                    }
-                }.addOnFailureListener{
-                    Log.d(TAG, "getQuantityById: ${it.message}")
-                }.await()
+                            Log.d(TAG, "getQuantityById: ${i.getString("product_id").toString()}")
+                        }
+                    }.addOnFailureListener{
+                        Log.d(TAG, "getQuantityById: ${it.message}")
+                    }.await()
+        }
 
         return count ?: 0
     }
 
     suspend fun addQuantityById(id:String){
         var count:Long?=null;
-        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
-                .get().addOnSuccessListener {
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                    .get().addOnSuccessListener {
 
-                    it.forEach { i->
-                        count = i.get("quantity") as Long?
-                      val num :Int= count!!.toInt()+1
-                        i.reference.update("quantity",num)
+                        it.forEach { i->
+                            count = i.get("quantity") as Long?
+                            val num :Int= count!!.toInt()+1
+                            i.reference.update("quantity",num)
+                        }
                     }
-                }
+        }
     }
     suspend fun minusQuantityById(id:String){
         var count:Long?=null;
-        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
-                .get().addOnSuccessListener {
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                    .get().addOnSuccessListener {
 
-                    it.forEach { i->
-                        count = i.get("quantity") as Long?
-                        val num :Int= count!!.toInt()-1
-                        i.reference.update("quantity",num)
+                        it.forEach { i->
+                            count = i.get("quantity") as Long?
+                            val num :Int= count!!.toInt()-1
+                            i.reference.update("quantity",num)
+                        }
                     }
-                }
+        }
     }
 
     suspend fun removeCartProductById(id:String){
-        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
-                .get().addOnSuccessListener {
-                    it.forEach { i ->
-                        firebaseFirestore.collection("USER").document(userID).collection("Cart").document(i.reference.id).delete()
-                                .addOnSuccessListener {
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                    .get().addOnSuccessListener {
+                        it.forEach { i ->
+                            firebaseFirestore.collection("USER").document(userID).collection("Cart").document(i.reference.id).delete()
+                                    .addOnSuccessListener {
 
-                                }.addOnFailureListener{
+                                    }.addOnFailureListener{
 
-                                }
+                                    }
+                        }
                     }
-                }
+        }
     }
-
 
     companion object{
        const val TAG = "Repo"
     }
+
+
+    suspend fun  add_address(address: Address){
+
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID)
+                    .collection("address")
+                    .document().set(address, SetOptions.merge())
+
+            Log.d(TAG,"msg:"+userID)
+        }
+
+    }
+
 }
