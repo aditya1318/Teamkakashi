@@ -94,8 +94,8 @@ class HomeFragment : Fragment(), ProductClickListener {
 
 
 
-    override fun onProductClickListener(model: Product_model, holder: MaterialCardView) {
-    vm.GetProductModel(model)
+    override fun onProductClickListener(model: Product_model, holder: MaterialCardView,product_id:String) {
+    vm.GetProductModel(model,product_id)
 
         holder.findNavController().navigate(R.id.action_homeFragment_to_productDetail)
 

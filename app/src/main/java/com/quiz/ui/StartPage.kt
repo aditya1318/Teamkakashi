@@ -9,7 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.google.android.gms.auth.api.Auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.quiz.ecommerce.R
 
 
@@ -17,7 +21,10 @@ class StartPage : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    val CurrentUser = FirebaseAuth.getInstance().currentUser
+if (CurrentUser!=null){
 
+}
     }
 
     override fun onCreateView(

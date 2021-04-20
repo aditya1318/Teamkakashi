@@ -10,8 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.quiz.Model.Address
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.User
 import com.quiz.ui.adapter.CartAdapter
 import kotlinx.coroutines.*
@@ -21,14 +21,23 @@ import java.lang.Exception
 class repository  {
 
     private lateinit var adapter: CartAdapter;
-
+    val userID =FirebaseAuth.getInstance().currentUser!!.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
 
-    suspend fun addCartItems( addToCart: Address)
+    suspend fun addCartItems(addToCart: Cart_Model)
     {
-        firebaseFirestore.collection("Cart")
 
-                .document().set(addToCart, SetOptions.merge())
+        firebaseFirestore.collection("USER").document(userID).collection("Cart")
+                .get().addOnSuccessListener {
+                    for (document in it) {
+                       if(document.id==addToCart.product_id){
+
+                       }
+                    }
+                }
+
+        firebaseFirestore.collection("USER").document(userID)
+                .collection("Cart").document().set(addToCart, SetOptions.merge())
                 .await()
     }
 
@@ -74,4 +83,23 @@ GlobalScope.launch(Dispatchers.IO){
                 }
             });
 }
+
+    suspend fun getQuantityById(id:String):String{
+
+        var count:String?=null;
+        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                .get().addOnSuccessListener { it ->
+                    it.forEach{i->
+                        count = i.getString("quantity").toString()
+                        Log.d(TAG, "getQuantityById: $count")
+
+                        Log.d(TAG, "getQuantityById: ${i.getString("product_id").toString()}")
+                    }
+                }
+
+        return count!!
+    }
+    companion object{
+       const val TAG = "Repo"
+    }
 }

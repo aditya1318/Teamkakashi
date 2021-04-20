@@ -197,7 +197,7 @@
                                     app:layout_constraintTop_toTopOf="parent">
 
                                     <ImageView
-                                        android:id="@+id/counterplus"
+                                        android:id="@+id/counterminus"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"
@@ -216,7 +216,7 @@
                                         android:textSize="15sp" />
 
                                     <ImageView
-                                        android:id="@+id/counterminus"
+                                        android:id="@+id/counteradd"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="1"

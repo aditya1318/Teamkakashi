@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.quiz.Model.Address
+import com.quiz.repo.Model.Address
 import com.quiz.ecommerce.R
 
 class AddressAdapter(options:FirestoreRecyclerOptions<Address>) : FirestoreRecyclerAdapter<Address,

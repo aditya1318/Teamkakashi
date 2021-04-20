@@ -14,9 +14,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
-import com.quiz.Model.Address
+import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Product_model
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.Cart_Model
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_product_detail.view.*
 
@@ -25,6 +26,8 @@ class productDetail : Fragment() {
 
     // lateinit var productdetail: productDetail
     lateinit var vm:Viewmodel
+    lateinit var id:String
+    lateinit var model:Product_model
     val mFireStore = FirebaseFirestore.getInstance()
 
 
@@ -54,14 +57,10 @@ class productDetail : Fragment() {
 
         }
 
-        view.findViewById<Button>(R.id.product_detail_buy_btn).setOnClickListener { view ->
-            Log.d("btnSetup", "Selected")
-            Toast.makeText(activity,"button,",Toast.LENGTH_LONG).show();
-            val cartModel:Address = Address("","","","")
-            vm.addcart(cartModel)
 
-        }
+
         vm.productitem.observe(viewLifecycleOwner, Observer<Product_model>{
+            model=it
                 view.Product_name.text = it.product_name
                 view.product_des.text = it.product_des
             Glide.with(view.img1.context)
@@ -75,6 +74,22 @@ class productDetail : Fragment() {
                     .into(view.imageprofile)
             view.product_rate.text = it.product_rate
         })
+
+        vm.product_id.observe(viewLifecycleOwner, Observer {
+            id=it
+            val ID = it
+
+        })
+
+        vm.getQuantityById("223")
+        vm.CounterValue.observe(viewLifecycleOwner, Observer {
+            view.countertext.text=it
+        })
+view.product_detail_buy_btn.setOnClickListener {
+    val cartModel :Cart_Model=Cart_Model(id,model.product_image,model.product_name,model.product_rate,"1")
+    vm.addcart(cartModel)
+}
+
 
 
         return view

@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.card.MaterialCardView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.quiz.repo.Model.Product_model
 import com.quiz.ProductClickListener
 import com.quiz.ecommerce.R
@@ -42,10 +43,14 @@ var productCard = itemView.findViewById<MaterialCardView>(R.id.productCard)
         holder.product_name?.text = model.product_name;
         holder.product_des?.text = model.product_des;
         holder.product_rate?.text = model.product_rate;
+        FirebaseFirestore.getInstance().collection("Products").document()
+                .get().addOnSuccessListener {
+                    model.product_id=  it.id
+                }
 
 
         holder.productCard.setOnClickListener{
-            productClickListener.onProductClickListener(model,holder.productCard)
+            productClickListener.onProductClickListener(model,holder.productCard,snapshots.getSnapshot(position).id)
         }
     }
 

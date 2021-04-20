@@ -11,15 +11,16 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.quiz.Model.Address
+import com.quiz.repo.Model.Address
 import com.quiz.ui.adapter.CartAdapter
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.Cart_Model
 import com.quiz.viewmodel.Viewmodel
-import kotlinx.android.synthetic.main.fragment_cart.view.*
 
-class CartFragment : Fragment() {
+class CartFragment : Fragment(),CartItemClickListener {
     lateinit var cartFragment: CartFragment
     private lateinit var adapter: CartAdapter;
     lateinit var recyclerView: RecyclerView
@@ -81,19 +82,23 @@ class CartFragment : Fragment() {
 
 
     fun setUpRecyclerView(){
-
+        val userID = FirebaseAuth.getInstance().currentUser!!.uid
         val query: Query =
-            FirebaseFirestore.getInstance().collection("Cart")
+            FirebaseFirestore.getInstance().collection("USER").document(userID).collection("Cart")
                 .orderBy("product_rate", Query.Direction.ASCENDING)
-        val options = FirestoreRecyclerOptions.Builder<Address>()
-            .setQuery(query, Address::class.java)
+        val options = FirestoreRecyclerOptions.Builder<Cart_Model>()
+            .setQuery(query, Cart_Model::class.java)
             .build();
-        adapter = CartAdapter(options)
+        adapter = CartAdapter(options,this)
 
 
         recyclerView.adapter = adapter;
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
+
+    }
+
+    override fun onCartAddClick(model: Cart_Model) {
 
     }
 }

@@ -11,11 +11,13 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.card.MaterialCardView
-import com.quiz.Model.Address
+import com.quiz.repo.Model.Address
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.Cart_Model
+import com.quiz.ui.CartItemClickListener
 
 
-class CartAdapter(options: FirestoreRecyclerOptions<Address>): FirestoreRecyclerAdapter<Address,
+class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val CartItemClickListener:CartItemClickListener): FirestoreRecyclerAdapter<Cart_Model,
         CartAdapter.ViewHolder>(options)  {
 
 
@@ -27,6 +29,7 @@ class CartAdapter(options: FirestoreRecyclerOptions<Address>): FirestoreRecycler
             var Product_name = itemView.findViewById<TextView>(R.id.cart_pname);
          //   var Product_price = itemView.findViewById<TextView>(R.id.product_price);
             var Product_img = itemView.findViewById<ImageView>(R.id.cart_image);
+        var add_btn = itemView.findViewById<ImageView>(R.id.Add_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -34,7 +37,7 @@ class CartAdapter(options: FirestoreRecyclerOptions<Address>): FirestoreRecycler
 
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Address) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Cart_Model) {
         Log.d("Bind:","Mirage");
         val url: String? = model.product_image;
         Glide.with(holder.Product_name.context)
@@ -47,6 +50,10 @@ class CartAdapter(options: FirestoreRecyclerOptions<Address>): FirestoreRecycler
         holder.Product_name?.text = model.product_name.toString();
       //  holder.Product_price?.text = model.product_rate.toString();
         holder.cart_card
+
+        holder.add_btn.setOnClickListener{
+            CartItemClickListener.onCartAddClick(model)
+        }
 
 
 
