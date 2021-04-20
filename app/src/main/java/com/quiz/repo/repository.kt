@@ -84,21 +84,64 @@ GlobalScope.launch(Dispatchers.IO){
             });
 }
 
-    suspend fun getQuantityById(id:String):String{
+    suspend fun getQuantityById(id:String):Long{
 
-        var count:String?=null;
+        var count:Long?=null;
         firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
                 .get().addOnSuccessListener { it ->
                     it.forEach{i->
-                        count = i.getString("quantity").toString()
-                        Log.d(TAG, "getQuantityById: $count")
+                                    count = i.get("quantity") as Long?
+                        Log.d(TAG, "getQuantityById: ${count.toString()}")
 
                         Log.d(TAG, "getQuantityById: ${i.getString("product_id").toString()}")
                     }
+                }.addOnFailureListener{
+                    Log.d(TAG, "getQuantityById: ${it.message}")
                 }.await()
 
-        return count!!
+        return count ?: 0
     }
+
+    suspend fun addQuantityById(id:String){
+        var count:Long?=null;
+        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                .get().addOnSuccessListener {
+
+                    it.forEach { i->
+                        count = i.get("quantity") as Long?
+                      val num :Int= count!!.toInt()+1
+                        i.reference.update("quantity",num)
+                    }
+                }
+    }
+    suspend fun minusQuantityById(id:String){
+        var count:Long?=null;
+        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                .get().addOnSuccessListener {
+
+                    it.forEach { i->
+                        count = i.get("quantity") as Long?
+                        val num :Int= count!!.toInt()-1
+                        i.reference.update("quantity",num)
+                    }
+                }
+    }
+
+    suspend fun removeCartProductById(id:String){
+        firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+                .get().addOnSuccessListener {
+                    it.forEach { i ->
+                        firebaseFirestore.collection("USER").document(userID).collection("Cart").document(i.reference.id).delete()
+                                .addOnSuccessListener {
+
+                                }.addOnFailureListener{
+
+                                }
+                    }
+                }
+    }
+
+
     companion object{
        const val TAG = "Repo"
     }

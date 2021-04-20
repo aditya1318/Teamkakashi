@@ -19,6 +19,7 @@ import com.quiz.repo.Model.Product_model
 import com.quiz.ecommerce.R
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.viewmodel.Viewmodel
+import kotlinx.android.synthetic.main.fragment_product_detail.*
 import kotlinx.android.synthetic.main.fragment_product_detail.view.*
 
 
@@ -77,14 +78,32 @@ class productDetail : Fragment() {
 
         vm.product_id.observe(viewLifecycleOwner, Observer {
             id=it
-            val ID = it
+
 
         })
 
-        vm.getQuantityById("223")
+        vm.getQuantityById()
         vm.CounterValue.observe(viewLifecycleOwner, Observer {
-            view.countertext.text=it
+            view.countertext.text= it.toString()
         })
+
+        view.counteradd.setOnClickListener {
+           vm.addQuantityById()
+          val c:String= view.countertext.text as String
+            view.countertext.text = (c.toInt()+1).toString()
+        }
+
+        view.counterminus.setOnClickListener {
+            if (view.countertext.text.toString().toInt() > 0) {
+                vm.minusQuantityById()
+                val c: String = view.countertext.text as String
+                view.countertext.text = (c.toInt() - 1).toString()
+            }else{
+vm.removeCartProductById()
+            }
+        }
+
+
 view.product_detail_buy_btn.setOnClickListener {
     val cartModel :Cart_Model=Cart_Model(id,model.product_image,model.product_name,model.product_rate,"1")
     vm.addcart(cartModel)

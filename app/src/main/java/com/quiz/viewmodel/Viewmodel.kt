@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers.Main
 class Viewmodel(application: Application) : AndroidViewModel(application) {
     //  private val liveData:MutableLiveData<Product_model>
     val productitem = MutableLiveData<Product_model>()
-    val CounterValue =MutableLiveData<String>()
+    val CounterValue =MutableLiveData<Long>()
     val product_id = MutableLiveData<String>()
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
@@ -45,8 +45,8 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 
     }
-    fun getQuantityById(id:String){
-        var count:String;
+    fun getQuantityById(){
+        var count:Long;
         val ID = product_id.value
         viewModelScope.launch(Dispatchers.IO){
           count  =repository.getQuantityById(ID!!)
@@ -56,6 +56,34 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
         }
 
     }
+
+    fun addQuantityById(){
+        val ID = product_id.value
+
+viewModelScope.launch(Dispatchers.IO) {
+    repository.addQuantityById(ID!!)
+}
+
+
+    }
+
+    fun minusQuantityById(){
+        val ID = product_id.value
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.minusQuantityById(ID!!)
+        }
+
+
+    }
+     fun removeCartProductById(){
+        val ID = product_id.value
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.removeCartProductById(ID!!)
+        }
+
+    }
+
 
 }
 
