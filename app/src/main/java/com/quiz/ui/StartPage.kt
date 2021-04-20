@@ -11,20 +11,27 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.quiz.ecommerce.R
 
 
 class StartPage : Fragment() {
-
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    val CurrentUser = FirebaseAuth.getInstance().currentUser
-if (CurrentUser!=null){
 
-}
+    }
+
+    override fun onStart() {
+        super.onStart()
+        auth = Firebase.auth
+        val currentUser = auth.currentUser
+        updateUI(currentUser)
     }
 
     override fun onCreateView(
@@ -48,6 +55,14 @@ if (CurrentUser!=null){
         // Inflate the layout for this fragment
         return view
     }
+    private fun updateUI(currentUser: FirebaseUser?) {
+        if(currentUser!=null){
+            findNavController().navigate(R.id.homeFragment)
+        }else{
+
+        }
+    }
+
 
 
 }

@@ -95,7 +95,7 @@ GlobalScope.launch(Dispatchers.IO){
 
                         Log.d(TAG, "getQuantityById: ${i.getString("product_id").toString()}")
                     }
-                }
+                }.await()
 
         return count!!
     }
