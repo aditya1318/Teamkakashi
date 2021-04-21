@@ -96,6 +96,14 @@ viewModelScope.launch(Dispatchers.IO) {
         }
     }
 
+    fun get_address(address: Address){
 
+        val ID = UserId.value
+        viewModelScope.launch(Dispatchers.IO) {
+
+            repository.get_address(address)
+
+        }
+    }
 }
 

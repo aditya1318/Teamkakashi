@@ -56,6 +56,7 @@ class Address_Dailog : DialogFragment() {
                                             view.Landmark.text.toString(),view.house_no.text.toString())
 
             vm.add_address(address)
+            dismiss()
 
         }
 

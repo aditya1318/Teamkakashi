@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="24dp"
-
             android:text="5/Kritan duplex ,near ram vatika, wahgodia rd vadodara -390011"
             android:textColor="#000"
             android:textSize="18sp"
