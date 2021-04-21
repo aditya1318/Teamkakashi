@@ -20,6 +20,8 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
     val UserId = MutableLiveData<String>()
+    val address_id = MutableLiveData<String>()
+    val addressmodel = MutableLiveData<Address>()
 
 
     fun addcart(addtocart: Cart_Model) {
@@ -96,14 +98,43 @@ viewModelScope.launch(Dispatchers.IO) {
         }
     }
 
-    fun get_address(address: Address){
 
-        val ID = UserId.value
-        viewModelScope.launch(Dispatchers.IO) {
 
-            repository.get_address(address)
+
+    fun getUser_id():String?{
+
+        return repository.getUser_id()
+    }
+
+
+    fun delete_add(id: String) {
+
+            viewModelScope.launch(Dispatchers.IO) {
+
+                repository.delete_add(id)
+            }
 
         }
+
+
+    fun edit_add(id:String, address: Address){
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            repository.edit_add(id,address)
+
+        }
+
+
+     fun edit_dailog(id: String,address: Address){
+
+         address_id.value= id
+         addressmodel.value = address
+
+
+     }
+
     }
-}
+
+    }
 

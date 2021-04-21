@@ -15,13 +15,15 @@ import com.quiz.ecommerce.ui.Address_Dailog
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Product_model
 import com.quiz.ui.adapter.AddressAdapter
+import com.quiz.ui.adapter.Onclickdelete
+import com.quiz.ui.adapter.Onclickedit
 import com.quiz.ui.adapter.ProductAdapter
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_address2.view.*
 import kotlinx.android.synthetic.main.fragment_cart.view.*
 
 
-class address : Fragment() {
+class address : Fragment() , Onclickdelete ,Onclickedit{
 
 
     private lateinit var adapter: AddressAdapter;
@@ -45,6 +47,9 @@ class address : Fragment() {
         // Inflate the layout for this fragment
 
         val view =inflater.inflate(R.layout.fragment_address2, container, false)
+        recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+
 
         view.add_Address.setOnClickListener {
 
@@ -52,6 +57,10 @@ class address : Fragment() {
 
 
         }
+
+        address()
+
+
         return view
 
     }
@@ -64,17 +73,43 @@ class address : Fragment() {
 
     fun address(){
 
-        val query: Query = FirebaseFirestore.getInstance().collection("USER").document().collection("Address")//.orderBy("product_name", Query.Direction.ASCENDING);
-        val options = FirestoreRecyclerOptions.Builder<Address>()
+        val userId = vm.getUser_id()
 
+        val query: Query = FirebaseFirestore.getInstance().collection("USER").document(userId!!).collection("address")//.orderBy("product_name", Query.Direction.ASCENDING);
+        val options = FirestoreRecyclerOptions.Builder<Address>()
                 .setQuery(query, Address::class.java)
                 .build();
-        adapter = AddressAdapter(options)
+
+
+        adapter = AddressAdapter(options,this,this)
 
 //    recyclerView.setAdapter(adapter);
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = adapter;
 
+        recyclerView.adapter = adapter;
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.stopListening()
+    }
+
+    override fun Onclick(id: String) {
+
+        vm.delete_add(id)
+
+    }
+
+    override fun Onclick2(id: String, address: Address) {
+
+        openDialog()
 
     }
 

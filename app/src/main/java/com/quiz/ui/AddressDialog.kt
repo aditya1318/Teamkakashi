@@ -50,6 +50,8 @@ class Address_Dailog : DialogFragment() {
         toolbar = view.findViewById(R.id.toolbar)
 
 
+
+
         view.save_btn.setOnClickListener {
 
             val address: Address = Address(view.full_name.text.toString(),view.phone_no.text.toString(),view.address.text.toString(),view.Pin.text.toString(),

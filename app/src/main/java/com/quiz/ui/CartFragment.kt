@@ -82,9 +82,9 @@ class CartFragment : Fragment(),CartItemClickListener {
 
 
     fun setUpRecyclerView(){
-        val userID = FirebaseAuth.getInstance().currentUser!!.uid
+        val userID = vm.getUser_id()
         val query: Query =
-            FirebaseFirestore.getInstance().collection("USER").document(userID).collection("Cart")
+            FirebaseFirestore.getInstance().collection("USER").document(userID!!).collection("Cart")
                 .orderBy("product_rate", Query.Direction.ASCENDING)
         val options = FirestoreRecyclerOptions.Builder<Cart_Model>()
             .setQuery(query, Cart_Model::class.java)

@@ -11,14 +11,15 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.quiz.repo.Model.Address
 import com.quiz.ecommerce.R
+import com.quiz.ecommerce.address
 
-class AddressAdapter (options: FirestoreRecyclerOptions<Address>):FirestoreRecyclerAdapter<Address,AddressAdapter.ViewHolder>(options){
+class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onclickdelete : Onclickdelete , private val onclickedit: Onclickedit):FirestoreRecyclerAdapter<Address,AddressAdapter.ViewHolder>(options){
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
 
 
-        var tv_Address = itemView.findViewById<TextView>(R.id.address)
+        var tv_Address = itemView.findViewById<TextView>(R.id.Address)
         var tv_delete = itemView.findViewById<TextView>(R.id.remove)
         var tv_edit = itemView.findViewById<TextView>(R.id.edit)
 
@@ -33,11 +34,11 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>):FirestoreRecyc
 
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Address) {
 
+        val add : String = model.homeno+" ,"+ model.address+" "+ model.landmark+" "+ model.zipCode
 
-        holder.tv_Address?.text = model.homeno + model.address+model.landmark +model.zipCode;
+        holder.tv_Address.text = add ;
 
 /*
         FirebaseFirestore.getInstance().collection("USER")
@@ -45,8 +46,35 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>):FirestoreRecyc
                 .document().get()
 */
 
+        val id : String = snapshots.getSnapshot(position).reference.id
+
+        holder.tv_delete.setOnClickListener {
+
+                    Onclickdelete.Onclick(id)
+
+
+        }
+
+
+        holder.tv_edit.setOnClickListener {
+
+            onclickedit.Onclick2(id,model)
+        }
 
     }
 
+
+
+}
+
+ interface Onclickdelete {
+
+     fun Onclick(id:String)
+
+ }
+
+interface  Onclickedit{
+
+    fun Onclick2(id: String,address: Address)
 
 }
