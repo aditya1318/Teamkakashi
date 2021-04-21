@@ -22,8 +22,8 @@ import java.lang.Exception
 
 class repository  {
 
-    private lateinit var adapter: CartAdapter;
-    val userID =FirebaseAuth.getInstance().currentUser?.uid
+
+    var userID =FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
 
 
@@ -33,7 +33,7 @@ class repository  {
 
 
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID)
+            firebaseFirestore.collection("USER").document(userID!!)
                     .collection("Cart").document().set(addToCart, SetOptions.merge())
                     .await()
         }
@@ -55,7 +55,9 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
                         name.trim { it <= ' ' },
                         email.trim{ it <= ' '}
                     )
-
+if(userID==null){
+    userID = user.id
+}
                     // Pass the required values in the constructor.
                     //     FirestoreClass().registerUser(this@RegisterActivity, user)
                     try {
@@ -86,7 +88,7 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
 
         var count:Long?=null;
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+            firebaseFirestore.collection("USER").document(userID!!).collection("Cart").whereEqualTo("product_id",id)
                     .get().addOnSuccessListener { it ->
                         it.forEach{i->
                             count = i.get("quantity") as Long?
@@ -105,7 +107,7 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
     suspend fun addQuantityById(id:String){
         var count:Long?=null;
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+            firebaseFirestore.collection("USER").document(userID!!).collection("Cart").whereEqualTo("product_id",id)
                     .get().addOnSuccessListener {
 
                         it.forEach { i->
@@ -119,7 +121,7 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
     suspend fun minusQuantityById(id:String){
         var count:Long?=null;
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+            firebaseFirestore.collection("USER").document(userID!!).collection("Cart").whereEqualTo("product_id",id)
                     .get().addOnSuccessListener {
 
                         it.forEach { i->
@@ -133,10 +135,10 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
 
     suspend fun removeCartProductById(id:String){
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID).collection("Cart").whereEqualTo("product_id",id)
+            firebaseFirestore.collection("USER").document(userID!!).collection("Cart").whereEqualTo("product_id",id)
                     .get().addOnSuccessListener {
                         it.forEach { i ->
-                            firebaseFirestore.collection("USER").document(userID).collection("Cart").document(i.reference.id).delete()
+                            firebaseFirestore.collection("USER").document(userID!!).collection("Cart").document(i.reference.id).delete()
                                     .addOnSuccessListener {
 
                                     }.addOnFailureListener{
@@ -155,7 +157,7 @@ suspend fun AuthenticateRegisterUser(email:String,password:String,name:String,v:
     suspend fun  add_address(address: Address){
 
         if (userID != null) {
-            firebaseFirestore.collection("USER").document(userID)
+            firebaseFirestore.collection("USER").document(userID!!)
                     .collection("address")
                     .document().set(address, SetOptions.merge())
 
