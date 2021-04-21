@@ -22,7 +22,7 @@ import java.lang.Exception
 
 class repository  {
 
-
+var mirage = "GAy"
     var userID =FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
 
