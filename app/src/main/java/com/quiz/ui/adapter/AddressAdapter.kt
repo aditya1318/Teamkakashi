@@ -75,6 +75,7 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
 
 interface  Onclickedit{
 
+
     fun Onclick2(id: String,address: Address)
 
 }

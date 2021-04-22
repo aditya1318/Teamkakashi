@@ -22,6 +22,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val UserId = MutableLiveData<String>()
     val address_id = MutableLiveData<String>()
     val addressmodel = MutableLiveData<Address>()
+    var resultCode : Int? = null
 
 
     fun addcart(addtocart: Cart_Model) {
@@ -126,15 +127,16 @@ viewModelScope.launch(Dispatchers.IO) {
         }
 
 
-     fun edit_dailog(id: String,address: Address){
-
-         address_id.value= id
-         addressmodel.value = address
-
-
-     }
 
     }
 
+    fun edit_dailog(id: String,address: Address, resultCode:Int? ){
+
+        address_id.value= id
+        addressmodel.value = address
+        this.resultCode = resultCode
     }
+
+
+}
 

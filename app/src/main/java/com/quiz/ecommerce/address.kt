@@ -13,11 +13,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.quiz.ecommerce.ui.Address_Dailog
 import com.quiz.repo.Model.Address
-import com.quiz.repo.Model.Product_model
 import com.quiz.ui.adapter.AddressAdapter
 import com.quiz.ui.adapter.Onclickdelete
 import com.quiz.ui.adapter.Onclickedit
-import com.quiz.ui.adapter.ProductAdapter
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_address2.view.*
 import kotlinx.android.synthetic.main.fragment_cart.view.*
@@ -109,9 +107,11 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
 
     override fun Onclick2(id: String, address: Address) {
 
+        vm.edit_dailog(id,address,1)
         openDialog()
-
     }
+
+
 
 
 }

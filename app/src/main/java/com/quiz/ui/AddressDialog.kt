@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.quiz.ecommerce.R
 import com.quiz.ecommerce.address
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 class Address_Dailog : DialogFragment() {
     private var toolbar: Toolbar? = null
     lateinit var vm: Viewmodel
+      var a : String? = null
 
     companion object{
     const val TAG = "example_dialog"
@@ -46,8 +48,28 @@ class Address_Dailog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
+
         val view = inflater.inflate(R.layout.address_dailog, container, false)
         toolbar = view.findViewById(R.id.toolbar)
+
+        if(vm.resultCode != null){
+
+            vm.address_id.observe(viewLifecycleOwner, Observer {
+                a = it
+
+            })
+
+            vm.addressmodel.observe(viewLifecycleOwner, Observer {
+
+                view.full_name.setText(it.name)
+                view.phone_no.setText(it.mobileNumber)
+                view.address.setText(it.address)
+                view.Pin.setText(it.zipCode)
+                view.Landmark.setText(it.landmark)
+                view.house_no.setText(it.homeno)
+
+            })
+        }
 
 
 
@@ -57,13 +79,30 @@ class Address_Dailog : DialogFragment() {
             val address: Address = Address(view.full_name.text.toString(),view.phone_no.text.toString(),view.address.text.toString(),view.Pin.text.toString(),
                                             view.Landmark.text.toString(),view.house_no.text.toString())
 
-            vm.add_address(address)
-            dismiss()
 
+            if(vm.resultCode != null){
+
+                vm.edit_add(a!!,address)
+
+            }else{
+                vm.add_address(address)
+            }
+
+
+            dismiss()
         }
 
-
         return view
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        vm.resultCode = null
     }
 
     override fun onStart() {
