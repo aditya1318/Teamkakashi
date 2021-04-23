@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-bottomNavigationView =findViewById(R.id.bottomNavigationView)
-      val navHostFragment:NavHostFragment = supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment;
+        bottomNavigationView =findViewById(R.id.bottomNavigationView)
+        val navHostFragment:NavHostFragment = supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment;
         NavigationUI.setupWithNavController(bottomNavigationView,
                 navHostFragment.navController);
 
@@ -44,12 +44,12 @@ bottomNavigationView =findViewById(R.id.bottomNavigationView)
                 R.id.homeFragment ->
                 {showBottomNav()
 
-                                 ShowTitleBar()}
+                    ShowTitleBar()}
                 R.id.SettingFragment ->
                 {showBottomNav()
                     hideTitleBar()}
                 R.id.productDetail -> {hideTitleBar()
-                hideBottomNav()}
+                    hideBottomNav()}
                 R.id.startPage ->
                 {hideTitleBar()
                     hideBottomNav()}

@@ -1,12 +1,14 @@
 package com.quiz.viewmodel
 
 import android.app.Application
+import android.os.Build.ID
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
+import com.quiz.repo.Model.Payment_Model
 import com.quiz.repo.Model.Product_model
 import com.quiz.repo.repository
 import kotlinx.coroutines.*
@@ -23,7 +25,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val address_id = MutableLiveData<String>()
     val addressmodel = MutableLiveData<Address>()
     var resultCode : Int? = null
-
+    val liveDatapaymentmodel= MutableLiveData<Payment_Model>()
 
     fun addcart(addtocart: Cart_Model) {
 
@@ -67,6 +69,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 viewModelScope.launch(Dispatchers.IO) {
     repository.addQuantityById(ID!!)
+
 }
 
 
@@ -135,6 +138,20 @@ viewModelScope.launch(Dispatchers.IO) {
         address_id.value= id
         addressmodel.value = address
         this.resultCode = resultCode
+    }
+
+     fun payment_detail(){
+         val id =getUser_id()
+         var paymentmodel: Payment_Model? =null
+         viewModelScope.launch(Dispatchers.IO) {
+              paymentmodel=repository.payment_details(id!!)
+             withContext(Main){
+                 liveDatapaymentmodel.value =paymentmodel!!
+             }
+
+         }
+
+
     }
 
 

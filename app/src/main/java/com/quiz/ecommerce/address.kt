@@ -1,6 +1,7 @@
 package com.quiz.ecommerce
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +29,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 
-class address : Fragment() , Onclickdelete ,Onclickedit,PaymentResultWithDataListener{
+class address : Fragment() , Onclickdelete ,Onclickedit{
 
    // private val TAG: String = address::class.java.getSimpleName()
     private lateinit var adapter: AddressAdapter;
@@ -51,31 +52,13 @@ class address : Fragment() , Onclickdelete ,Onclickedit,PaymentResultWithDataLis
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var amount:String = "1000"
-        var RoundAmount = Math.round(amount.toFloat() * 100)
+
         val view =inflater.inflate(R.layout.fragment_address2, container, false)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
-        view.pay_card.setOnClickListener {
-            Checkout.preload(activity)
-            val checkout = Checkout()
-            checkout.setKeyID("rzp_test_Ae2Nf5hoWLy8gR")
-            checkout.setImage(R.drawable.rzp_logo)
-
-            val options = JSONObject()
-            try {
-                options.put("name", "jams Infotech")
-                options.put("description", "Reference No. #123456")
-                options.put("theme.color", "#3399cc")
-                options.put("currency", "INR")
-                options.put("amount", RoundAmount)
-                options.put("prefill.contact", "8488093696")
-                options.put("prefill.email", "ceo@jams.tech")
-                options.put("send_sms_hash",true)
-                checkout.open(activity, options)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+        view.paypal.setOnClickListener {
+           val intent = Intent(activity,PaymentGateway::class.java)
+            startActivity(intent)
         }
 
 
@@ -143,13 +126,6 @@ class address : Fragment() , Onclickdelete ,Onclickedit,PaymentResultWithDataLis
         openDialog()
     }
 
-    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-        Toast.makeText(activity,"Payment Success"+p0,Toast.LENGTH_LONG).show()
-    }
-
-    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-        Toast.makeText(activity,"Failed"+p1,Toast.LENGTH_LONG).show()
-    }
 
     /* override fun onPaymentSuccess(p0: String?) {
          val builder = AlertDialog.Builder(activity)

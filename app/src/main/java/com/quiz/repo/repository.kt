@@ -10,10 +10,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.quiz.ecommerce.PaymentGateway
 import com.quiz.ecommerce.R
 import com.quiz.ecommerce.address
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
+import com.quiz.repo.Model.Payment_Model
 import com.quiz.repo.Model.User
 import com.quiz.ui.adapter.CartAdapter
 import kotlinx.coroutines.*
@@ -191,4 +193,22 @@ class repository {
                 .document(id).set(address, SetOptions.merge())
 
     }
+    suspend fun payment_details(id: String):Payment_Model{
+        var paymentModel:Payment_Model?=null
+
+        firebaseFirestore.collection("USER").document(userID!!)
+
+            .get().addOnSuccessListener {
+
+                 paymentModel = Payment_Model(it.get("firstname").toString(),it.get("email").toString(),it.get("mobile").toString())
+
+            }
+
+            .addOnFailureListener {
+
+            }.await()
+        return paymentModel!!
+    }
+
 }
+
