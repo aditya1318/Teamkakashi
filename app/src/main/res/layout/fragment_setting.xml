@@ -12,9 +12,6 @@
     android:background="#ffffff"
     >
 
-
-
-
     <ImageView
         android:id="@+id/cart_image"
         android:layout_width="30dp"

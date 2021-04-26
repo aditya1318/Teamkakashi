@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
@@ -28,7 +29,10 @@ class Login : Fragment() {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
         et_email = view.findViewById(R.id.et_email)
+
         et_password = view.findViewById(R.id.et_password)
+
+
         view.findViewById<Button>(R.id.StartpageLoginBtn).setOnClickListener {
             logInRegisteredUser(it)
 
@@ -85,6 +89,13 @@ class Login : Fragment() {
                         //hideProgressDialog()
                         //  showErrorSnackBar(task.exception!!.message.toString(), true)
                         Log.d(TAG, "logInRegisteredUser: ${task.exception}")
+
+
+                        val snackBar = Snackbar.make(
+                           v, "Please  check your email and password ",
+                            Snackbar.LENGTH_LONG
+                        ).setAction("Action", null)
+                        snackBar.show()
                     }
                 }
         }

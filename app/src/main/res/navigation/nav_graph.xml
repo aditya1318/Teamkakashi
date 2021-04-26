@@ -84,15 +84,18 @@
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" >
 
+        <action
+            android:id="@+id/action_SettingFragment_to_payment_history"
+            app:destination="@id/payment_history" />
     </fragment>
-    <fragment
-        android:id="@+id/addressFragment"
-        android:name="com.quiz.ecommerce.addressFragment"
-        android:label="fragment_address"
-        tools:layout="@layout/fragment_address" />
     <fragment
         android:id="@+id/address"
         android:name="com.quiz.ecommerce.address"
         android:label="fragment_address2"
         tools:layout="@layout/fragment_address2" />
+    <fragment
+        android:id="@+id/payment_history"
+        android:name="com.quiz.ecommerce.Payment_history"
+        android:label="fragment_payment_history"
+        tools:layout="@layout/fragment_payment_history" />
 </navigation>

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import com.quiz.ecommerce.R
+import kotlinx.android.synthetic.main.fragment_setting.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +43,15 @@ class Setting : Fragment() {
 
         view.findViewById<ImageView>(R.id.cart_image).setOnClickListener{
             it.findNavController().navigate(R.id.homeFragment)
+
+
         }
+
+        view.findViewById<CardView>(R.id.cardView4).setOnClickListener {
+
+            it.findNavController().navigate(R.id.action_SettingFragment_to_payment_history)
+        }
+
         return view
     }
 
