@@ -11,10 +11,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.others.Event
+
 
 import com.quiz.ecommerce.R
-import com.quiz.errorHandling.Resource
+
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.User
@@ -27,8 +27,7 @@ class repository  {
     var userID =FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
 
-    val _resgisterSuccessfull = MutableLiveData<Event<Resource<Boolean>>>()
-    val resgisterSuccessfull : MutableLiveData<Event<Resource<Boolean>>> =_resgisterSuccessfull
+
 
 
 
@@ -76,13 +75,7 @@ if(userID==null){
                 }
 
 
-_resgisterSuccessfull.postValue(
-        Event(
-                Resource.success(
-                        true
-                )
-        )
-)
+
                     } catch (e: Exception) {
                         Log.d(ContentValues.TAG, "registerUser: e ${e.toString()}")
                     }
