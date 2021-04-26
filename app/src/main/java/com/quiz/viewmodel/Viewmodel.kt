@@ -1,7 +1,9 @@
 package com.quiz.viewmodel
 
 import android.app.Application
+import android.nfc.Tag
 import android.os.Build.ID
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -11,8 +13,11 @@ import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Payment_Model
 import com.quiz.repo.Model.Product_model
 import com.quiz.repo.repository
+import com.quiz.util.Resource
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class Viewmodel(application: Application) : AndroidViewModel(application) {
     //  private val liveData:MutableLiveData<Product_model>
@@ -27,6 +32,20 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     var resultCode : Int? = null
     val liveDatapaymentmodel= MutableLiveData<Payment_Model>()
 
+private  val _register = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+val register : StateFlow<CurrentEvent> = _register
+    sealed class CurrentEvent {
+
+        class  Success(val resultText :String) : CurrentEvent()
+        class  Failure(val errorText : String) : CurrentEvent()
+
+        object Loading: CurrentEvent()
+        object Empty : CurrentEvent()
+    }
+
+
+
+
     fun addcart(addtocart: Cart_Model) {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,9 +55,20 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun AuthenticateRegisterUser(email: String, name: String, v: View, password: String) {
+
+
+    //new one impl
+    fun AuthenticateRegisterUser(email: String, name: String, password: String) {
+        _register.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            repository.AuthenticateRegisterUser(email, password, name, v)
+            when(val response= repository.AuthenticateRegisterUser(email, password, name)){
+
+                is Resource.Success -> {_register.value =CurrentEvent.Success("Success")}
+                is Resource.Error -> {_register.value = CurrentEvent.Failure(response.msg!!)
+
+                }
+
+            }
         }
     }
 

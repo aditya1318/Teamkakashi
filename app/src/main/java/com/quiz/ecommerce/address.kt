@@ -66,7 +66,6 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
 
             openDialog()
 
-
         }
 
         address()
