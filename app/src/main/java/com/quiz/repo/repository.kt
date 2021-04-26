@@ -3,6 +3,7 @@ package com.quiz.repo
 import android.content.ContentValues
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
@@ -10,21 +11,25 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.others.Event
+
 import com.quiz.ecommerce.R
-import com.quiz.ecommerce.address
+import com.quiz.errorHandling.Resource
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.User
-import com.quiz.ui.adapter.CartAdapter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
 class repository  {
 
-var mirage = "GAy"
     var userID =FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore : FirebaseFirestore= FirebaseFirestore.getInstance();
+
+    val _resgisterSuccessfull = MutableLiveData<Event<Resource<Boolean>>>()
+    val resgisterSuccessfull : MutableLiveData<Event<Resource<Boolean>>> =_resgisterSuccessfull
+
 
 
 
@@ -71,12 +76,19 @@ if(userID==null){
                 }
 
 
-
+_resgisterSuccessfull.postValue(
+        Event(
+                Resource.success(
+                        true
+                )
+        )
+)
                     } catch (e: Exception) {
                         Log.d(ContentValues.TAG, "registerUser: e ${e.toString()}")
                     }
 
                 } else {
+
                     Log.d(ContentValues.TAG, "registerUser: ${task.exception}")
                     // Hide the progress dialog
 
@@ -106,6 +118,7 @@ if(userID==null){
 
     suspend fun addQuantityById(id:String){
         var count:Long?=null;
+
         if (userID != null) {
             firebaseFirestore.collection("USER").document(userID!!).collection("Cart").whereEqualTo("product_id",id)
                     .get().addOnSuccessListener {

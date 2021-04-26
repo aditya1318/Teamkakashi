@@ -29,13 +29,14 @@ class productDetail : Fragment() {
     lateinit var vm:Viewmodel
     lateinit var id:String
     lateinit var model:Product_model
+    var Counter: Long? =null
     val mFireStore = FirebaseFirestore.getInstance()
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //  vm = ViewModelProvider.of(requireActivity())
+       
 
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
@@ -77,36 +78,56 @@ class productDetail : Fragment() {
         })
 
         vm.product_id.observe(viewLifecycleOwner, Observer {
-            id=it
+            id=it   
 
 
         })
 
         vm.getQuantityById()
-        vm.CounterValue.observe(viewLifecycleOwner, Observer {
+        vm.CounterValue.observe(viewLifecycleOwner, {
             view.countertext.text= it.toString()
+            Counter = it
+            if(it!! >0){
+                product_detail_buy_btn.visibility = View.GONE
+            }else{
+                product_detail_buy_btn.visibility = View.VISIBLE
+            }
         })
 
         view.counteradd.setOnClickListener {
-           vm.addQuantityById()
-          val c:String= view.countertext.text as String
-            view.countertext.text = (c.toInt()+1).toString()
+            if(countertext.text=="0"){
+                val cartModel :Cart_Model=Cart_Model(id,model.product_image,model.product_name,model.product_rate,1)
+                val c: String = view.countertext.text as String
+                view.countertext.text = (c.toInt() + 1).toString()
+                vm.addcart(cartModel)
+            }else {
+                vm.addQuantityById()
+                val c: String = view.countertext.text as String
+                view.countertext.text = (c.toInt() + 1).toString()
+            }
         }
 
         view.counterminus.setOnClickListener {
-            if (view.countertext.text.toString().toInt() > 0) {
+            if (view.countertext.text.toString().toInt() > 1) {
                 vm.minusQuantityById()
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() - 1).toString()
             }else{
-vm.removeCartProductById()
+                if(view.countertext.text.toString().toInt() == 1){
+                    val c: String = view.countertext.text as String
+                    view.countertext.text = (c.toInt() - 1).toString()
+                }
+                    vm.removeCartProductById()
+
             }
         }
 
 
 view.product_detail_buy_btn.setOnClickListener {
-    val cartModel :Cart_Model=Cart_Model(id,model.product_image,model.product_name,model.product_rate,"1")
-    vm.addcart(cartModel)
+
+        val cartModel: Cart_Model = Cart_Model(id, model.product_image, model.product_name, model.product_rate, 1)
+        vm.addcart(cartModel)
+
 }
 
 

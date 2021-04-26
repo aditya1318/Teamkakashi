@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -67,9 +68,8 @@ class Register : Fragment() {
                 false
             }
 
-            TextUtils.isEmpty(phoneNumber.toString().trim { it <= ' ' }) -> {
-                false
-            }
+            TextUtils.isEmpty(phoneNumber.toString().trim { it <= ' ' })  && phoneNumber.text!!.length ==10 -> { Toast.makeText(activity,"falses",Toast.LENGTH_SHORT)
+                false }
 
             TextUtils.isEmpty(password.text.toString().trim { it <= ' ' }) -> {
                 false
