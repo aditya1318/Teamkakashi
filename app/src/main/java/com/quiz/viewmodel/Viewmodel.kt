@@ -15,6 +15,7 @@ import com.quiz.repo.Model.Product_model
 import com.quiz.repo.repository
 import com.quiz.util.Resource
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,9 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 private  val _register = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
 val register : StateFlow<CurrentEvent> = _register
+
+    private val _Login = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val Login : StateFlow<CurrentEvent> = _Login
     sealed class CurrentEvent {
 
         class  Success(val resultText :String) : CurrentEvent()
@@ -68,6 +72,18 @@ val register : StateFlow<CurrentEvent> = _register
 
                 }
 
+            }
+        }
+    }
+
+
+
+    fun UserLoign(email:String,password:String){
+        _Login.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response = repository.userLogin(email, password)){
+                is Resource.Success -> {_Login.value = CurrentEvent.Success("success")}
+                is Resource.Error -> {_Login.value = CurrentEvent.Failure(response.msg!!)}
             }
         }
     }

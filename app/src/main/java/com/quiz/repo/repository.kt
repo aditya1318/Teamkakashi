@@ -8,6 +8,7 @@ import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Payment_Model
 import com.quiz.repo.auth.AuthencationRepoImpl
+import com.quiz.repo.auth.LoginRepoImpl
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -15,6 +16,7 @@ class repository {
 
 
     val authencationImpl = AuthencationRepoImpl()
+    val loginRepoImpl = LoginRepoImpl()
     var userID = FirebaseAuth.getInstance().currentUser?.uid
     val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -24,6 +26,10 @@ class repository {
 
        return authencationImpl.AuthenticateRegisterUser(email,password, name)
    }
+
+    suspend fun userLogin(email:String,password:String):Resource<Boolean>{
+        return loginRepoImpl.userLogin(email,password)
+    }
 
 
 

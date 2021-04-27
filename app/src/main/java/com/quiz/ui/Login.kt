@@ -10,16 +10,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
+import com.quiz.viewmodel.Viewmodel
+import kotlinx.coroutines.flow.collect
+import java.lang.Exception
+import java.security.Provider
 
 
 class Login : Fragment() {
     lateinit var et_email: TextInputEditText;
     lateinit var et_password: TextInputEditText;
+    lateinit var vm :Viewmodel
 
 
     override fun onCreateView(
@@ -28,6 +35,7 @@ class Login : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
+
         et_email = view.findViewById(R.id.et_email)
 
         et_password = view.findViewById(R.id.et_password)
@@ -35,9 +43,16 @@ class Login : Fragment() {
 
         view.findViewById<Button>(R.id.StartpageLoginBtn).setOnClickListener {
             logInRegisteredUser(it)
-
-
-
+        }
+        lifecycleScope.launchWhenStarted {
+            vm.Login.collect {event ->
+             when(event){
+                 is Viewmodel.CurrentEvent.Success -> {view.findNavController().navigate(R.id.homeFragment)}
+                 is Viewmodel.CurrentEvent.Failure -> {Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()}
+                 is Viewmodel.CurrentEvent.Loading ->{}
+                 else -> Unit
+             }
+            }
         }
 
         view.findViewById<TextView>(R.id.SignupBtn).setOnClickListener {
@@ -45,6 +60,14 @@ class Login : Fragment() {
         }
 
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        vm = activity?.let {
+            ViewModelProviders.of(it)[Viewmodel::class.java]
+        } ?: throw Exception("Activity is null")
+
     }
 
     private fun validateLoginDetails(): Boolean {
@@ -74,30 +97,8 @@ class Login : Fragment() {
             val email = et_email.text.toString().trim { it <= ' ' }
             val password = et_password.text.toString().trim { it <= ' ' }
 
-            // Log-In using FirebaseAuth
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+         vm.UserLoign(email, password)
 
-                    if (task.isSuccessful) {
-                        //  FirestoreClass().getUserDetails(this@LoginActivity)
-
-                        v.findNavController().navigate(R.id.action_login_to_homeFragment)
-
-
-                    } else {
-                        // Hide the progress dialog
-                        //hideProgressDialog()
-                        //  showErrorSnackBar(task.exception!!.message.toString(), true)
-                        Log.d(TAG, "logInRegisteredUser: ${task.exception}")
-
-
-                        val snackBar = Snackbar.make(
-                           v, "Please  check your email and password ",
-                            Snackbar.LENGTH_LONG
-                        ).setAction("Action", null)
-                        snackBar.show()
-                    }
-                }
         }
 
     }
