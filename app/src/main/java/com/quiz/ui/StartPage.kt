@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -21,6 +19,7 @@ import com.quiz.ecommerce.R
 
 
 class StartPage : Fragment() {
+
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +41,10 @@ class StartPage : Fragment() {
          view.findViewById<Button>(R.id.StartpageLoginBtn).setOnClickListener{
              Log.d(TAG, "onCreateView: " + "clicked")
              try {
-                       it.findNavController().navigate(R.id.login)
+                 it.findNavController().navigate(R.id.login)
              }catch (e:Exception){
                  Log.d(TAG, "onCreateView:  ${e.toString()}")
              }
-
          }
 
         view.findViewById<TextView>(R.id.SignupBtn).setOnClickListener{
@@ -58,6 +56,7 @@ class StartPage : Fragment() {
     private fun updateUI(currentUser: FirebaseUser?) {
         if(currentUser!=null){
             findNavController().navigate(R.id.homeFragment)
+
         }else{
 
         }

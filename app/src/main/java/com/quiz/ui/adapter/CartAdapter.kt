@@ -17,8 +17,8 @@ import com.quiz.repo.Model.Cart_Model
 import com.quiz.ui.CartItemClickListener
 
 
-class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val CartItemClickListener:CartItemClickListener): FirestoreRecyclerAdapter<Cart_Model,
-        CartAdapter.ViewHolder>(options)  {
+class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val CartItemClickListener:CartItemClickListener):
+    FirestoreRecyclerAdapter<Cart_Model, CartAdapter.ViewHolder>(options)  {
 
 
 

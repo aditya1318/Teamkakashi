@@ -7,6 +7,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
 import com.quiz.util.Resource
+import kotlinx.coroutines.tasks.await
 
 class LoginRepoImpl :LoginRepo{
 
@@ -14,26 +15,32 @@ class LoginRepoImpl :LoginRepo{
 var errorMessage = ""
         var result = false
 
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+        try {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
 
-                    if (task.isSuccessful) {
-                       result=true
+                        if (task.isSuccessful) {
+                            result=true
 
-                    } else {
-                        // Hide the progress dialog
-                        //hideProgressDialog()
-                        //  showErrorSnackBar(task.exception!!.message.toString(), true)
-                        Log.d(ContentValues.TAG, "logInRegisteredUser: ${task.exception}")
-                        errorMessage = if (task.exception == null){
-                            "Unexpected error occur."
-                        }else{
-                            task.exception!!.message.toString()
+                        } else {
+                            // Hide the progress dialog
+                            //hideProgressDialog()
+                            //  showErrorSnackBar(task.exception!!.message.toString(), true)
+                            Log.d(ContentValues.TAG, "logInRegisteredUser: ${task.exception}")
+                            errorMessage = if (task.exception == null){
+                                "Unexpected error occur."
+                            }else{
+                                task.exception!!.message.toString()
+                            }
+
                         }
+                    }.await()
+            return Resource.Success(null)
+        }
+        catch (e:Exception){
+            return Resource.Error(errorMessage);
 
-                    }
-                }
-     return if(result) Resource.Success(null) else Resource.Error(errorMessage)
+        }
     }
 
 }

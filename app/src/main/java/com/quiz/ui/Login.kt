@@ -1,5 +1,6 @@
 package com.quiz.ui
 
+import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.TextUtils
@@ -9,15 +10,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
+import com.quiz.util.CommonUtils
 import com.quiz.viewmodel.Viewmodel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import java.lang.Exception
 import java.security.Provider
@@ -27,6 +32,8 @@ class Login : Fragment() {
     lateinit var et_email: TextInputEditText;
     lateinit var et_password: TextInputEditText;
     lateinit var vm :Viewmodel
+    private var loading: Dialog? = null
+
 
 
     override fun onCreateView(
@@ -47,9 +54,14 @@ class Login : Fragment() {
         lifecycleScope.launchWhenStarted {
             vm.Login.collect {event ->
              when(event){
-                 is Viewmodel.CurrentEvent.Success -> {view.findNavController().navigate(R.id.homeFragment)}
-                 is Viewmodel.CurrentEvent.Failure -> {Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()}
-                 is Viewmodel.CurrentEvent.Loading ->{}
+                 is Viewmodel.CurrentEvent.Success -> {hideLoading()
+                     view.findNavController().navigate(R.id.homeFragment)
+                     }
+                 is Viewmodel.CurrentEvent.Failure -> {hideLoading()
+                     Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()
+                 }
+                 is Viewmodel.CurrentEvent.Loading ->{showLoading()
+                 }
                  else -> Unit
              }
             }
@@ -62,6 +74,12 @@ class Login : Fragment() {
         return view
     }
 
+    override fun onStart() {
+        super.onStart()
+
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = activity?.let {
@@ -69,6 +87,7 @@ class Login : Fragment() {
         } ?: throw Exception("Activity is null")
 
     }
+
 
     private fun validateLoginDetails(): Boolean {
         return when {
@@ -102,5 +121,16 @@ class Login : Fragment() {
         }
 
     }
+    private fun hideLoading(){
+        loading?.let {
+            if(it.isShowing)it.cancel()
+        }
+
+    }
+    private fun showLoading(){
+        hideLoading()
+        loading = context?.let { CommonUtils.showLoadingDialog(it) }
+    }
+
 
 }

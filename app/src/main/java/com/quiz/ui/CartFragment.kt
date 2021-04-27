@@ -80,7 +80,6 @@ class CartFragment : Fragment(),CartItemClickListener {
     }
 
 
-
     fun setUpRecyclerView(){
         val userID = vm.getUser_id()
         val query: Query =
