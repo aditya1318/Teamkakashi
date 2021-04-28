@@ -30,6 +30,8 @@ class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val Cart
          //   var Product_price = itemView.findViewById<TextView>(R.id.product_price);
             var Product_img = itemView.findViewById<ImageView>(R.id.cart_image);
         var add_btn = itemView.findViewById<ImageView>(R.id.Add_btn)
+        var minus_btn = itemView.findViewById<ImageView>(R.id.minus_btn)
+        var Counter = itemView.findViewById<TextView>(R.id.Counter)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -45,7 +47,7 @@ class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val Cart
             .placeholder(R.drawable.fui_ic_googleg_color_24dp)
             .into(holder.Product_img)
 
-
+holder.Counter.text = model.quantity!!.toInt().toString()
 
         holder.Product_name?.text = model.product_name.toString();
       //  holder.Product_price?.text = model.product_rate.toString();

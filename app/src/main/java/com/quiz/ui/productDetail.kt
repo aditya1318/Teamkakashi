@@ -36,6 +36,7 @@ class productDetail : Fragment() {
     lateinit var id:String
     lateinit var model:Product_model
     var Counter: Long? =null
+   lateinit var userId :String
     val mFireStore = FirebaseFirestore.getInstance()
 
 
@@ -48,7 +49,7 @@ class productDetail : Fragment() {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
 
-
+userId = vm.getUser_id()!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +66,7 @@ class productDetail : Fragment() {
 
         }
 
-        vm.getQuantityById()
+        vm.getQuantityById(userId)
         Log.d("asd", "onCreateView: asdasd")
         vm.CounterValue.observe(viewLifecycleOwner, {
             view.countertext.text = it.toString()
@@ -73,9 +74,11 @@ class productDetail : Fragment() {
             Counter = it
             if (it!! > 0) {
                 product_detail_buy_btn.visibility = View.GONE
+                product_detail_buy_btn.isEnabled = false
 
             } else {
                 product_detail_buy_btn.visibility = View.VISIBLE
+                product_detail_buy_btn.isEnabled = true
 
             }
         })
@@ -140,9 +143,9 @@ counteradd.isEnabled= false
                 val cartModel :Cart_Model=Cart_Model(id,model.product_image,model.product_name,model.product_rate,1)
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() + 1).toString()
-                vm.addcart(cartModel)
+                vm.addcart(cartModel,userId)
             }else {
-                vm.addQuantityById()
+                vm.addQuantityById(userId)
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() + 1).toString()
             }
@@ -151,7 +154,7 @@ counteradd.isEnabled= false
 
         view.counterminus.setOnClickListener {
             if (view.countertext.text.toString().toInt() > 1) {
-                vm.minusQuantityById()
+                vm.minusQuantityById(userId)
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() - 1).toString()
             }else{
@@ -159,7 +162,7 @@ counteradd.isEnabled= false
                     val c: String = view.countertext.text as String
                     view.countertext.text = (c.toInt() - 1).toString()
                 }
-                    vm.removeCartProductById()
+                    vm.removeCartProductById(userId)
 
             }
         }
@@ -168,7 +171,7 @@ counteradd.isEnabled= false
 view.product_detail_buy_btn.setOnClickListener {
 
         val cartModel: Cart_Model = Cart_Model(id, model.product_image, model.product_name, model.product_rate, 1)
-        vm.addcart(cartModel)
+        vm.addcart(cartModel,userId)
 
 }
 

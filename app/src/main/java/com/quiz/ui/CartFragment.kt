@@ -26,6 +26,7 @@ class CartFragment : Fragment(),CartItemClickListener {
     lateinit var recyclerView: RecyclerView
     lateinit var vm: Viewmodel
     lateinit  var address : Button
+    lateinit var userID :String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,7 @@ class CartFragment : Fragment(),CartItemClickListener {
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
-
+userID=vm.getUser_id()!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,7 +99,11 @@ class CartFragment : Fragment(),CartItemClickListener {
     }
 
     override fun onCartAddClick(model: Cart_Model) {
+vm.addQuantityByIdCart(model.product_id!!,userID )
+    }
 
+    override fun onCartMinusClick(model: Cart_Model) {
+        vm.minusQuantityByIdCart(model.product_id!!,userID)
     }
 }
 
