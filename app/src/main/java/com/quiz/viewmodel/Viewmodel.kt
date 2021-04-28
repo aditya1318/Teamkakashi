@@ -8,7 +8,6 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Payment_Model
@@ -28,7 +27,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val product_id = MutableLiveData<String>()
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
-    var UserId = FirebaseAuth.getInstance().currentUser!!.uid
+    val UserId = MutableLiveData<String>()
     val address_id = MutableLiveData<String>()
     val addressmodel = MutableLiveData<Address>()
     var resultCode : Int? = null
@@ -40,8 +39,17 @@ val register : StateFlow<CurrentEvent> = _register
     private val _Login = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
     val Login : StateFlow<CurrentEvent> = _Login
 
-    private val _Cart = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
-    val Cart : StateFlow<CurrentEvent> = _Cart
+    private  val _add_address = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val add_address : StateFlow<CurrentEvent> = _add_address
+
+    private  val _edit_add = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val edit_add : StateFlow<CurrentEvent> = _edit_add
+
+    private  val _delete_add = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val delete_add : StateFlow<CurrentEvent> = _delete_add
+
+
+
     sealed class CurrentEvent {
 
         class  Success(val resultText :String) : CurrentEvent()
@@ -71,12 +79,7 @@ val register : StateFlow<CurrentEvent> = _register
         viewModelScope.launch(Dispatchers.IO) {
             when(val response= repository.AuthenticateRegisterUser(email, password, name)){
 
-                is Resource.Success -> {_register.value =CurrentEvent.Success("Success")
-                    withContext(Main) {
-                        UserId = response.data!!
-                    }
-
-            }
+                is Resource.Success -> {_register.value =CurrentEvent.Success("Success")}
                 is Resource.Error -> {_register.value = CurrentEvent.Failure(response.msg!!)
 
                 }
@@ -108,102 +111,88 @@ val register : StateFlow<CurrentEvent> = _register
 
     }
     fun getQuantityById(){
-        _Cart.value =CurrentEvent.Loading
-        viewModelScope.launch(IO){
-            when(val response = product_id.value.let { repository.getQuantityById(it!!) }){
-                is Resource.Success -> {
-                    _Cart.value = CurrentEvent.Success("success")
-                    withContext(Main) {
-
-                        CounterValue.value = response.data!!
-                        Log.d("viewModel", "getQuantityById: ${CounterValue.value}")
-                    }
-                }
-                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+        var count:Long;
+        val ID = product_id.value
+        viewModelScope.launch(Dispatchers.IO){
+          count  =repository.getQuantityById(ID!!)
+            withContext(Main){
+                CounterValue.value=count
             }
         }
 
     }
 
     fun addQuantityById(){
+        val ID = product_id.value
 
+viewModelScope.launch(Dispatchers.IO) {
+    repository.addQuantityById(ID!!)
 
-        _Cart.value =CurrentEvent.Loading
-        viewModelScope.launch(IO){
-            when(val response = product_id.value.let { repository.addQuantityById(it!!) }){
-                is Resource.Success -> {
-                    _Cart.value = CurrentEvent.Success("success")
-                }
-                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
-            }
-        }
+}
 
 
     }
 
     fun minusQuantityById(){
-        _Cart.value =CurrentEvent.Loading
-        viewModelScope.launch(IO){
-            when(val response = product_id.value?.let { repository.minusQuantityById(it) }){
-                is Resource.Success -> {
-                    _Cart.value = CurrentEvent.Success("success")
-                }
-                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
-            }
+        val ID = product_id.value
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.minusQuantityById(ID!!)
         }
 
 
     }
      fun removeCartProductById(){
-         _Cart.value =CurrentEvent.Loading
-         viewModelScope.launch(IO){
-             when(val response = product_id.value?.let { repository.removeCartProductById(it) }){
-                 is Resource.Success -> {
-                     _Cart.value = CurrentEvent.Success("success")
-                 }
-                 is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
-             }
-         }
+        val ID = product_id.value
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.removeCartProductById(ID!!)
+        }
 
     }
 
     fun add_address(address: Address){
 
-        val ID =UserId
+        _add_address.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.add_address(address)
+            when(val response  =  repository.add_address(address)){
 
+                is Resource.Success -> {_add_address.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_add_address.value = CurrentEvent.Failure(response.msg!!)}
+            }
         }
     }
 
 
 
-
-    fun getUser_id():String?{
-
-        return repository.getUser_id()
-    }
 
 
     fun delete_add(id: String) {
 
-            viewModelScope.launch(Dispatchers.IO) {
 
-                repository.delete_add(id)
+             _delete_add.value = CurrentEvent.Loading
+             viewModelScope.launch(Dispatchers.IO) {
+
+             when(val response  =  repository.delete_add(id)){
+
+                is Resource.Success -> {_delete_add.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_delete_add.value = CurrentEvent.Failure(response.msg!!)}
             }
-
         }
+    }
 
 
     fun edit_add(id:String, address: Address){
 
+        _edit_add.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.edit_add(id,address)
+            when(val response  =  repository.edit_add(id,address)){
 
+                is Resource.Success -> {_edit_add.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_edit_add.value = CurrentEvent.Failure(response.msg!!)}
+            }
         }
-
 
 
     }
@@ -215,7 +204,20 @@ val register : StateFlow<CurrentEvent> = _register
         this.resultCode = resultCode
     }
 
-     fun payment_detail(){
+
+
+
+
+
+
+    fun getUser_id():String?{
+
+        return repository.getUser_id()
+    }
+
+
+
+    fun payment_detail(){
          val id =getUser_id()
          var paymentmodel: Payment_Model? =null
          viewModelScope.launch(Dispatchers.IO) {

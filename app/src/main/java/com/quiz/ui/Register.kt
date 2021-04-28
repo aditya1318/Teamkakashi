@@ -1,6 +1,5 @@
 package com.quiz.ui
 
-import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.TextUtils
@@ -24,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.quiz.repo.Model.User
 import com.quiz.ecommerce.R
-import com.quiz.util.CommonUtils
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -34,7 +32,7 @@ import java.lang.Exception
 import java.util.EnumSet.of
 
 class Register : Fragment() {
-    private var loading:Dialog? = null
+
     lateinit var vm: Viewmodel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +56,11 @@ class Register : Fragment() {
             vm.register.collect { event ->
                 when(event){
                     is Viewmodel.CurrentEvent.Success ->{
-
-                            hideLoading()
+                        withContext(Main) {
                             view.findNavController().navigate(R.id.action_register_to_login)
-
-
+                        }
                     }
                     is Viewmodel.CurrentEvent.Failure ->{
-                        hideLoading()
                         val snackBar = view?.let {
                             Snackbar.make(
                                     it, event.errorText,
@@ -73,14 +68,13 @@ class Register : Fragment() {
                             ).setAction("Action", null)
                         }
                         if (snackBar != null) {
-
                             snackBar.show()
                         }
 
                     }
                     is Viewmodel.CurrentEvent.Loading -> {
 
-                        showLoading()
+                      //for jeet
 
                     }
                     else -> Unit
@@ -93,7 +87,6 @@ class Register : Fragment() {
         view.findViewById<ImageView>(R.id.backBtn).setOnClickListener {
             it.findNavController().navigate(R.id.action_register_to_startPage)
         }
-
 
 
         return view
@@ -170,17 +163,6 @@ class Register : Fragment() {
            vm.AuthenticateRegisterUser(Email.text.toString(),et_name.text.toString(),password.text.toString())
 
         }
-    }
-    private fun hideLoading(){
-
-        loading?.let {
-            if(it.isShowing)it.cancel()
-        }
-
-    }
-    private fun showLoading(){
-        hideLoading()
-        loading = context?.let { CommonUtils.showLoadingDialog(it) }
     }
 
 
