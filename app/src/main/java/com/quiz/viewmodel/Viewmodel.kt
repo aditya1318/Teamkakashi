@@ -8,6 +8,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Payment_Model
@@ -27,7 +28,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val product_id = MutableLiveData<String>()
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
-    val UserId = MutableLiveData<String>()
+    var UserId = FirebaseAuth.getInstance().currentUser!!.uid
     val address_id = MutableLiveData<String>()
     val addressmodel = MutableLiveData<Address>()
     var resultCode : Int? = null
@@ -38,6 +39,9 @@ val register : StateFlow<CurrentEvent> = _register
 
     private val _Login = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
     val Login : StateFlow<CurrentEvent> = _Login
+
+    private val _Cart = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val Cart : StateFlow<CurrentEvent> = _Cart
     sealed class CurrentEvent {
 
         class  Success(val resultText :String) : CurrentEvent()
@@ -67,7 +71,12 @@ val register : StateFlow<CurrentEvent> = _register
         viewModelScope.launch(Dispatchers.IO) {
             when(val response= repository.AuthenticateRegisterUser(email, password, name)){
 
-                is Resource.Success -> {_register.value =CurrentEvent.Success("Success")}
+                is Resource.Success -> {_register.value =CurrentEvent.Success("Success")
+                    withContext(Main) {
+                        UserId = response.data!!
+                    }
+
+            }
                 is Resource.Error -> {_register.value = CurrentEvent.Failure(response.msg!!)
 
                 }
@@ -99,48 +108,68 @@ val register : StateFlow<CurrentEvent> = _register
 
     }
     fun getQuantityById(){
-        var count:Long;
-        val ID = product_id.value
-        viewModelScope.launch(Dispatchers.IO){
-          count  =repository.getQuantityById(ID!!)
-            withContext(Main){
-                CounterValue.value=count
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response = product_id.value.let { repository.getQuantityById(it!!) }){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                    withContext(Main) {
+
+                        CounterValue.value = response.data!!
+                        Log.d("viewModel", "getQuantityById: ${CounterValue.value}")
+                    }
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
             }
         }
 
     }
 
     fun addQuantityById(){
-        val ID = product_id.value
 
-viewModelScope.launch(Dispatchers.IO) {
-    repository.addQuantityById(ID!!)
 
-}
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response = product_id.value.let { repository.addQuantityById(it!!) }){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
 
 
     }
 
     fun minusQuantityById(){
-        val ID = product_id.value
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.minusQuantityById(ID!!)
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response = product_id.value?.let { repository.minusQuantityById(it) }){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+            }
         }
 
 
     }
      fun removeCartProductById(){
-        val ID = product_id.value
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.removeCartProductById(ID!!)
-        }
+         _Cart.value =CurrentEvent.Loading
+         viewModelScope.launch(IO){
+             when(val response = product_id.value?.let { repository.removeCartProductById(it) }){
+                 is Resource.Success -> {
+                     _Cart.value = CurrentEvent.Success("success")
+                 }
+                 is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+             }
+         }
 
     }
 
     fun add_address(address: Address){
 
-        val ID =UserId.value
+        val ID =UserId
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.add_address(address)

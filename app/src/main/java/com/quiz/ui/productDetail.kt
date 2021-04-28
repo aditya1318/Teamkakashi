@@ -11,8 +11,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Product_model
@@ -21,6 +23,10 @@ import com.quiz.repo.Model.Cart_Model
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_product_detail.*
 import kotlinx.android.synthetic.main.fragment_product_detail.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 
 
 class productDetail : Fragment() {
@@ -59,6 +65,21 @@ class productDetail : Fragment() {
 
         }
 
+        vm.getQuantityById()
+        Log.d("asd", "onCreateView: asdasd")
+        vm.CounterValue.observe(viewLifecycleOwner, {
+            view.countertext.text = it.toString()
+            Log.d("kuchbhi", "onCreateView: $it")
+            Counter = it
+            if (it!! > 0) {
+                product_detail_buy_btn.visibility = View.GONE
+
+            } else {
+                product_detail_buy_btn.visibility = View.VISIBLE
+
+            }
+        })
+
 
 
         vm.productitem.observe(viewLifecycleOwner, Observer<Product_model>{
@@ -80,19 +101,39 @@ class productDetail : Fragment() {
         vm.product_id.observe(viewLifecycleOwner, Observer {
             id=it   
 
-
         })
 
-        vm.getQuantityById()
-        vm.CounterValue.observe(viewLifecycleOwner, {
-            view.countertext.text= it.toString()
-            Counter = it
-            if(it!! >0){
-                product_detail_buy_btn.visibility = View.GONE
-            }else{
-                product_detail_buy_btn.visibility = View.VISIBLE
+       
+
+        lifecycleScope.launchWhenStarted {
+            vm.Cart.collect { event ->
+                when(event){
+                    is Viewmodel.CurrentEvent.Success -> {
+                        counteradd.isEnabled= true
+                        counterminus.isEnabled =true
+                    }
+                    is Viewmodel.CurrentEvent.Failure ->{
+                        counteradd.isEnabled= true
+                        counterminus.isEnabled =true
+                        val snackBar = view?.let {
+                            Snackbar.make(
+                                    it, event.errorText,
+                                    Snackbar.LENGTH_LONG
+                            ).setAction("Action", null)
+                        }
+                        if (snackBar != null) {
+                            snackBar.show()
+                        }
+
+                    }
+                    is Viewmodel.CurrentEvent.Loading -> {
+counteradd.isEnabled= false
+                        counterminus.isEnabled =false
+                    }
+                    else -> Unit
+                }
             }
-        })
+        }
 
         view.counteradd.setOnClickListener {
             if(countertext.text=="0"){
@@ -105,6 +146,7 @@ class productDetail : Fragment() {
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() + 1).toString()
             }
+
         }
 
         view.counterminus.setOnClickListener {

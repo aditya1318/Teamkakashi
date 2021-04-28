@@ -9,13 +9,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.quiz.repo.Model.User
+import com.quiz.util.Contants
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
 
 class AuthencationRepoImpl: AuthenicationRepo {
 
     val firebaseFirestore  = FirebaseFirestore.getInstance()
-    override suspend fun AuthenticateRegisterUser(email: String, password: String, name: String): Resource<Boolean> {
+    lateinit var user:String
+    override suspend fun AuthenticateRegisterUser(email: String, password: String, name: String): Resource<String> {
     var result = false
         var errorString = " "
        try {
@@ -35,6 +37,7 @@ class AuthencationRepoImpl: AuthenicationRepo {
 
                                           email.trim { it <= ' ' }
                                   )
+                                  this.user =user.id
                                   result = true
 
                                   // Pass the required values in the constructor.
@@ -57,14 +60,16 @@ class AuthencationRepoImpl: AuthenicationRepo {
 
 
 
-                            return if(result)  Resource.Success<Boolean>(true)  else{Resource.Error<Boolean>(errorString)}
+                            return if(result)  Resource.Success<String>(user)  else{Resource.Error<String>(errorString)}
                          }
          catch(e:Exception){
 
-                           return  Resource.Error<Boolean>(e.localizedMessage!!)
+                           return  Resource.Error<String>(e.localizedMessage!!)
 
 
       }
 
     }
+
+
 }
