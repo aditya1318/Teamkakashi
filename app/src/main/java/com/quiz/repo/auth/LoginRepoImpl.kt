@@ -7,6 +7,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
 import com.quiz.util.Resource
+import kotlinx.coroutines.tasks.await
 
 class LoginRepoImpl :LoginRepo{
 
@@ -32,7 +33,7 @@ var errorMessage = ""
                         }
 
                     }
-                }
+                }.await()
      return if(result) Resource.Success(null) else Resource.Error(errorMessage)
     }
 

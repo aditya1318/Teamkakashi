@@ -56,7 +56,7 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
         setUpRecyclerView()
 
 
-        viewmodel.payment_detail()
+       /* viewmodel.payment_detail()*/
 
 
         viewmodel.liveDatapaymentmodel.observe(this, Observer {

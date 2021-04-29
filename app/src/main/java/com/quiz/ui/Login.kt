@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
 import com.quiz.util.CommonUtils
 import com.quiz.viewmodel.Viewmodel
+import kotlinx.android.synthetic.main.fragment_start_page.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import java.lang.Exception
@@ -58,8 +59,11 @@ class Login : Fragment() {
                      }
                  is Viewmodel.CurrentEvent.Failure -> {hideLoading()
                      Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()
+                     StartpageLoginBtn.isEnabled = true
+
                  }
                  is Viewmodel.CurrentEvent.Loading ->{showLoading()
+                     StartpageLoginBtn.isEnabled = false
                  }
                  else -> Unit
              }

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.quiz.repo.Model.Address
 import com.quiz.repo.repository
+import com.quiz.util.Contants.userID
 import com.quiz.util.Resource
 
 
@@ -15,7 +16,7 @@ class AddressRepoImpl : AddressRepo {
     var result = false
 
     val firebaseFirestore = FirebaseFirestore.getInstance()
-    var userID = FirebaseAuth.getInstance().currentUser?.uid
+  //  var userID = FirebaseAuth.getInstance().currentUser?.uid
 
 
     override suspend fun add_address(address: Address, UserId: String): Resource<Boolean> {
@@ -23,7 +24,7 @@ class AddressRepoImpl : AddressRepo {
         var errorMessage = " "
         try {
 
-            if (userID != null) {
+
 
                 firebaseFirestore.collection("USER").document(UserId)
 
@@ -31,11 +32,9 @@ class AddressRepoImpl : AddressRepo {
                         .document().set(address, SetOptions.merge())
 
                 result = true
-                Log.d(repository.TAG, "msg:" + userID)
-            }
-            return if (result) Resource.Success<Boolean>(true) else {
-                Resource.Error<Boolean>(errorMessage)
-            }
+
+
+            return Resource.Success<Boolean>(true)
 
         } catch (e: Exception) {
 
@@ -51,16 +50,13 @@ class AddressRepoImpl : AddressRepo {
         Log.d("msg ", "$result")
 
         try {
-            if (userID != null) {
+
                 firebaseFirestore.collection("USER").document(UserId)
                         .collection("address")
                         .document(id).delete()
 
-            }
-            return if (result) Resource.Success<Boolean>(true) else {
-                Resource.Error<Boolean>(errorMessage)
-            }
 
+            return Resource.Success<Boolean>(true)
 
         } catch (E: Exception) {
 
@@ -80,10 +76,7 @@ class AddressRepoImpl : AddressRepo {
                     .collection("address")
                     .document(id).set(address, SetOptions.merge())
 
-            return if (result) Resource.Success<Boolean>(true) else {
-                Resource.Error<Boolean>(errorMessage)
-            }
-
+            return Resource.Success<Boolean>(true)
         } catch (e: Exception) {
 
             return Resource.Error<Boolean>(e.localizedMessage!!)

@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.homeFragment ->
                 {showBottomNav()
 
-                    ShowTitleBar()}
+                    hideTitleBar()}
                 R.id.SettingFragment ->
                 {showBottomNav()
                     hideTitleBar()}
@@ -57,7 +57,12 @@ class MainActivity : AppCompatActivity() {
                     hideBottomNav()}
                 R.id.register ->{hideTitleBar()
                     hideBottomNav()}
+                R.id.cartFragment ->{
+                    hideTitleBar()
+                    hideBottomNav()
+                }
                 else -> hideBottomNav()
+
             }
         }
     }
