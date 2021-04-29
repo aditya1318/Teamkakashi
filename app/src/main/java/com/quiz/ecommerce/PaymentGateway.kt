@@ -30,6 +30,7 @@ import org.json.JSONObject
 import java.security.Provider
 
 class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
+
         lateinit var payment_rate : String
         lateinit var  adapter : CartpaymentAdapter
         lateinit var   rc_cart : RecyclerView

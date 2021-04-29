@@ -9,6 +9,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStarted
+import androidx.navigation.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.quiz.ecommerce.R
 import com.quiz.ecommerce.address
 import com.quiz.repo.Model.Address
@@ -16,6 +20,7 @@ import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.address_dailog.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -23,6 +28,7 @@ class Address_Dailog : DialogFragment() {
     private var toolbar: Toolbar? = null
     lateinit var vm: Viewmodel
       var a : String? = null
+    lateinit var userId : String
 
     companion object{
     const val TAG = "example_dialog"
@@ -41,6 +47,8 @@ class Address_Dailog : DialogFragment() {
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
+
+        userId = vm.getUser_id()!!
 
 
     }
@@ -73,6 +81,24 @@ class Address_Dailog : DialogFragment() {
 
 
 
+        lifecycleScope.launchWhenStarted {
+            vm.add_address.collect {event ->
+                when(event){
+                    is Viewmodel.CurrentEvent.Success -> {
+                    }
+                    is Viewmodel.CurrentEvent.Failure -> {
+                        Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()
+                    }
+                    is Viewmodel.CurrentEvent.Loading ->{
+
+                    }
+                    else -> Unit
+                }
+            }
+        }
+
+
+
 
         view.save_btn.setOnClickListener {
 
@@ -82,11 +108,13 @@ class Address_Dailog : DialogFragment() {
 
             if(vm.resultCode != null){
 
-                vm.edit_add(a!!,address)
+                  vm.edit_add(a!!,address,userId)
 
             }else{
-                vm.add_address(address)
-            }
+
+                   vm.add_address(address,userId)
+
+                }
 
 
             dismiss()

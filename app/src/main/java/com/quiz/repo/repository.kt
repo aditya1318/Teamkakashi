@@ -21,14 +21,23 @@ class repository {
 
     val authencationImpl = AuthencationRepoImpl()
     val loginRepoImpl = LoginRepoImpl()
-
+    var userID: String? = null
     val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance();
-    private var cartRepoImpl: CartRepoImpl = CartRepoImpl()
+    private var cartRepoImpl:CartRepoImpl
 
-
-
+    init {
+userID = if (Firebase.auth.currentUser== null) {
+    null
+        }else{
+            FirebaseAuth.getInstance().currentUser!!.uid
+        }
+        cartRepoImpl = userID?.let { CartRepoImpl(it) }!!
+}
 
    suspend fun AuthenticateRegisterUser(email: String, password: String, name: String) : Resource<String>{
+       when(val response =authencationImpl.AuthenticateRegisterUser(email,password, name)){
+           is Resource.Success ->{userID = response.data!!}
+       }
 
        return authencationImpl.AuthenticateRegisterUser(email,password, name)
    }
@@ -39,26 +48,26 @@ class repository {
 
 
 
-    suspend fun addCartItems(addToCart: Cart_Model,userID:String):Resource<Boolean> {
-        return cartRepoImpl.addCartItems(addToCart,userID)
+    suspend fun addCartItems(addToCart: Cart_Model):Resource<Boolean> {
+        return cartRepoImpl.addCartItems(addToCart)
     }
 
 
-    suspend fun getQuantityById(id: String,userID:String): Resource<Long> {
+    suspend fun getQuantityById(id: String): Resource<Long> {
         Log.d("repo", "getQuantityById: $id")
-        return cartRepoImpl.getQuantityById(id,userID)
+        return cartRepoImpl.getQuantityById(id)
     }
 
-    suspend fun addQuantityById(id: String,userID:String) :Resource<Boolean>{
-       return cartRepoImpl.addQuantityById(id,userID)
+    suspend fun addQuantityById(id: String) :Resource<Boolean>{
+       return cartRepoImpl.addQuantityById(id)
     }
 
-    suspend fun minusQuantityById(id: String,userID:String):Resource<Boolean> {
-      return cartRepoImpl.minusQuantityById(id, userID)
+    suspend fun minusQuantityById(id: String):Resource<Boolean> {
+      return cartRepoImpl.minusQuantityById(id)
     }
 
-    suspend fun removeCartProductById(id: String,userID:String):Resource<Boolean> {
-       return cartRepoImpl.removeCartProductById(id, userID)
+    suspend fun removeCartProductById(id: String):Resource<Boolean> {
+       return cartRepoImpl.removeCartProductById(id)
     }
 
     companion object {
@@ -68,7 +77,13 @@ class repository {
 
     suspend fun add_address(address: Address) {
 
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID!!)
+                    .collection("address")
+                    .document().set(address, SetOptions.merge())
 
+            Log.d(TAG, "msg:" + userID)
+        }
 
 
 
@@ -76,13 +91,19 @@ class repository {
 
 
     fun getUser_id(): String? {
-return authencationImpl.getUserId()
 
+        return userID
     }
 
 
     suspend fun delete_add(id: String) {
 
+        if (userID != null) {
+            firebaseFirestore.collection("USER").document(userID!!)
+                    .collection("address")
+                    .document(id).delete()
+
+        }
 
     }
 
@@ -90,9 +111,12 @@ return authencationImpl.getUserId()
     suspend fun edit_add(id:String , address: Address){
 
 
+        firebaseFirestore.collection("USER").document(userID!!)
+                .collection("address")
+                .document(id).set(address, SetOptions.merge())
 
     }
-   /* suspend fun payment_details(id: String):Payment_Model{
+    suspend fun payment_details(id: String):Payment_Model{
         var paymentModel:Payment_Model?=null
 
         firebaseFirestore.collection("USER").document(userID!!)
@@ -108,7 +132,7 @@ return authencationImpl.getUserId()
             }.await()
         return paymentModel!!
     }
-*/
+
 
 }
 

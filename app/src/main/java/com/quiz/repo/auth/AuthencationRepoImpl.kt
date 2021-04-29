@@ -71,9 +71,5 @@ class AuthencationRepoImpl: AuthenicationRepo {
 
     }
 
-    override fun getUserId(): String {
-        return FirebaseAuth.getInstance().currentUser!!.uid
-    }
-
 
 }
