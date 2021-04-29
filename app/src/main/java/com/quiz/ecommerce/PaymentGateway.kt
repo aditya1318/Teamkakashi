@@ -38,6 +38,7 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
         lateinit var user_email : String
         lateinit var merchant_name : String
         lateinit var viewmodel: Viewmodel
+        lateinit var id: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +53,11 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
 
         } ?: throw Exception("Activity is null")
 
-
+            id = viewmodel.getUser_id()!!
         setUpRecyclerView()
 
 
-        viewmodel.payment_detail()
+        viewmodel.payment_detail(id)
 
 
         viewmodel.liveDatapaymentmodel.observe(this, Observer {

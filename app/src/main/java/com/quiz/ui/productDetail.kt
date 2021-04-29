@@ -76,7 +76,8 @@ class productDetail : Fragment() {
                 product_detail_buy_btn.visibility = View.GONE
                 product_detail_buy_btn.isEnabled = false
 
-            } else {
+            }
+            else if (Counter!!.toInt() == 0) {
                 product_detail_buy_btn.visibility = View.VISIBLE
                 product_detail_buy_btn.isEnabled = true
 
@@ -149,6 +150,11 @@ class productDetail : Fragment() {
                 val c: String = view.countertext.text as String
                 view.countertext.text = (c.toInt() + 1).toString()
             }
+            if (view.countertext.text.toString().toInt() > 0) {
+                product_detail_buy_btn.visibility = View.GONE
+                product_detail_buy_btn.isEnabled = false
+
+            }
 
         }
 
@@ -163,9 +169,14 @@ class productDetail : Fragment() {
                     view.countertext.text = (c.toInt() - 1).toString()
                 }
                 vm.removeCartProductById(userId)
+            }
+             if (view.countertext.text.toString().toInt() == 0) {
+                product_detail_buy_btn.visibility = View.VISIBLE
+                product_detail_buy_btn.isEnabled = true
 
             }
         }
+
 
 
         view.product_detail_buy_btn.setOnClickListener {

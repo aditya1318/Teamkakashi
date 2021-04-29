@@ -28,7 +28,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     val product_id = MutableLiveData<String>()
     val repository: repository = repository();
     val ArrayCartModel = MutableLiveData<ArrayList<Cart_Model>>();
-    var UserId = FirebaseAuth.getInstance().currentUser!!.uid
+//    var UserId = FirebaseAuth.getInstance().currentUser!!.uid
     val address_id = MutableLiveData<String>()
     val addressmodel = MutableLiveData<Address>()
     var resultCode : Int? = null
@@ -42,6 +42,18 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
     private val _Cart = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
     val Cart : StateFlow<CurrentEvent> = _Cart
+
+    private  val _add_address = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val add_address : StateFlow<CurrentEvent> = _add_address
+
+    private  val _edit_add = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val edit_add : StateFlow<CurrentEvent> = _edit_add
+
+    private  val _delete_add = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val delete_add : StateFlow<CurrentEvent> = _delete_add
+
+
+
     sealed class CurrentEvent {
 
         class  Success(val resultText :String) : CurrentEvent()
@@ -72,9 +84,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
             when(val response= repository.AuthenticateRegisterUser(email, password, name)){
 
                 is Resource.Success -> {_register.value =CurrentEvent.Success("Success")
-                    withContext(Main) {
-                        UserId = response.data!!
-                    }
+
 
                 }
                 is Resource.Error -> {_register.value = CurrentEvent.Failure(response.msg!!)
@@ -103,10 +113,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun addQuantity(model: Cart_Model) {
 
-
-    }
     fun getQuantityById(userID :String){
         _Cart.value =CurrentEvent.Loading
         viewModelScope.launch(IO){
@@ -167,14 +174,56 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun add_address(address: Address){
+    fun add_address(address: Address,UserId : String){
 
-        val ID =UserId
+        _add_address.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.add_address(address)
+            when(val response  =  repository.add_address(address,UserId)){
 
+                is Resource.Success -> {_add_address.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_add_address.value = CurrentEvent.Failure(response.msg!!)}
+            }
         }
+    }
+
+
+
+
+
+    fun delete_add(id: String,UserId : String) {
+
+
+        _delete_add.value = CurrentEvent.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+
+            when(val response  =  repository.delete_add(id,UserId)){
+
+                is Resource.Success -> {_delete_add.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_delete_add.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
+    }
+
+
+    fun edit_add(id:String, address: Address,UserId : String){
+
+        _edit_add.value = CurrentEvent.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+
+            when(val response  =  repository.edit_add(id,address,UserId)){
+
+                is Resource.Success -> {_edit_add.value = CurrentEvent.Success("succers")}
+                is Resource.Error ->{_edit_add.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
+    }
+
+    fun edit_dailog(id: String,address: Address, resultCode:Int? ){
+
+        address_id.value= id
+        addressmodel.value = address
+        this.resultCode = resultCode
     }
 
 
@@ -186,37 +235,10 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun delete_add(id: String) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-
-            repository.delete_add(id)
-        }
-
-    }
 
 
-    fun edit_add(id:String, address: Address){
+    fun payment_detail(id : String){
 
-        viewModelScope.launch(Dispatchers.IO) {
-
-            repository.edit_add(id,address)
-
-        }
-
-
-
-    }
-
-    fun edit_dailog(id: String,address: Address, resultCode:Int? ){
-
-        address_id.value= id
-        addressmodel.value = address
-        this.resultCode = resultCode
-    }
-
-    /*fun payment_detail(){
-        val id =getUser_id()
         var paymentmodel: Payment_Model? =null
         viewModelScope.launch(Dispatchers.IO) {
              paymentmodel=repository.payment_details(id!!)
@@ -228,7 +250,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 
    }
-     */
+
 
     fun addQuantityByIdCart(product_id: String,userID :String){
 

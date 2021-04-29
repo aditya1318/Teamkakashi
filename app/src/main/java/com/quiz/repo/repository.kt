@@ -10,9 +10,11 @@ import com.quiz.repo.Cart.CartRepoImpl
 import com.quiz.repo.Model.Address
 import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.Model.Payment_Model
+import com.quiz.repo.addressRepo.AddressRepoImpl
 import com.quiz.repo.auth.AuthencationRepoImpl
 import com.quiz.repo.auth.LoginRepoImpl
 import com.quiz.util.Contants
+import com.quiz.util.Contants.userID
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -25,7 +27,7 @@ class repository {
 
     val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance();
     private var cartRepoImpl: CartRepoImpl = CartRepoImpl()
-
+    var addressRepoImp : AddressRepoImpl = AddressRepoImpl()
 
 
 
@@ -67,14 +69,24 @@ class repository {
     }
 
 
-    suspend fun add_address(address: Address) {
+    suspend fun add_address(address: Address,UserId : String): Resource<Boolean> {
 
-
-
-
+        return addressRepoImp.add_address(address,UserId)
 
     }
 
+
+    suspend fun delete_add(id: String,UserId : String): Resource<Boolean> {
+
+        return addressRepoImp.delete_add(id,UserId)
+    }
+
+
+    suspend fun edit_add(id: String, address: Address,UserId : String): Resource<Boolean> {
+
+        return addressRepoImp.edit_add(id, address,UserId)
+
+    }
 
     fun getUser_id(): String? {
         return authencationImpl.getUserId()
@@ -82,21 +94,11 @@ class repository {
     }
 
 
-    suspend fun delete_add(id: String) {
 
-
-    }
-
-
-    suspend fun edit_add(id:String , address: Address){
-
-
-
-    }
-    /* suspend fun payment_details(id: String):Payment_Model{
+  suspend fun payment_details(id: String):Payment_Model{
          var paymentModel:Payment_Model?=null
 
-         firebaseFirestore.collection("USER").document(userID!!)
+         firebaseFirestore.collection("USER").document(id)
 
              .get().addOnSuccessListener {
 
@@ -109,6 +111,6 @@ class repository {
              }.await()
          return paymentModel!!
      }
- */
+
 
 }

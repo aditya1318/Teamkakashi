@@ -44,7 +44,7 @@
             android:background="@drawable/countershape"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cart_image"
-            app:layout_constraintTop_toBottomOf="@+id/product_name">
+            app:layout_constraintTop_toBottomOf="@+id/cart_pname">
 
             <ImageView
                 android:id="@+id/minus_btn"

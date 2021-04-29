@@ -35,7 +35,7 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
     private lateinit var adapter: AddressAdapter;
     lateinit var recyclerView: RecyclerView
     lateinit var vm: Viewmodel
-
+    lateinit var userId:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
-
+        userId = vm.getUser_id()!!
 
     }
 
@@ -115,7 +115,7 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
 
     override fun Onclick(id: String) {
 
-        vm.delete_add(id)
+        vm.delete_add(id,userId)
 
     }
 
