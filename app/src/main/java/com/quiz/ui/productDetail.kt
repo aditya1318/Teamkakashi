@@ -36,20 +36,20 @@ class productDetail : Fragment() {
     lateinit var id:String
     lateinit var model:Product_model
     var Counter: Long? =null
-   lateinit var userId :String
+    lateinit var userId :String
     val mFireStore = FirebaseFirestore.getInstance()
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       
+
 
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
 
-userId = vm.getUser_id()!!
+        userId = vm.getUser_id()!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -87,8 +87,8 @@ userId = vm.getUser_id()!!
 
         vm.productitem.observe(viewLifecycleOwner, Observer<Product_model>{
             model=it
-                view.Product_name.text = it.product_name
-                view.product_des.text = it.product_des
+            view.Product_name.text = it.product_name
+            view.product_des.text = it.product_des
             Glide.with(view.img1.context)
                     .load(it.product_image)
                     .placeholder(R.drawable.ic_microphone_black_48dp)
@@ -102,41 +102,41 @@ userId = vm.getUser_id()!!
         })
 
         vm.product_id.observe(viewLifecycleOwner, Observer {
-            id=it   
+            id=it
 
         })
 
-       
 
-//        lifecycleScope.launchWhenStarted {
-//            vm.Cart.collect { event ->
-//                when(event){
-//                    is Viewmodel.CurrentEvent.Success -> {
-//                        counteradd.isEnabled= true
-//                        counterminus.isEnabled =true
-//                    }
-//                    is Viewmodel.CurrentEvent.Failure ->{
-//                        counteradd.isEnabled= true
-//                        counterminus.isEnabled =true
-//                        val snackBar = view?.let {
-//                            Snackbar.make(
-//                                    it, event.errorText,
-//                                    Snackbar.LENGTH_LONG
-//                            ).setAction("Action", null)
-//                        }
-//                        if (snackBar != null) {
-//                            snackBar.show()
-//                        }
-//
-//                    }
-//                    is Viewmodel.CurrentEvent.Loading -> {
-//counteradd.isEnabled= false
-//                        counterminus.isEnabled =false
-//                    }
-//                    else -> Unit
-//                }
-//            }
-//        }
+
+        lifecycleScope.launchWhenStarted {
+            vm.Cart.collect { event ->
+                when(event){
+                    is Viewmodel.CurrentEvent.Success -> {
+                        counteradd.isEnabled= true
+                        counterminus.isEnabled =true
+                    }
+                    is Viewmodel.CurrentEvent.Failure ->{
+                        counteradd.isEnabled= true
+                        counterminus.isEnabled =true
+                        val snackBar = view?.let {
+                            Snackbar.make(
+                                    it, event.errorText,
+                                    Snackbar.LENGTH_LONG
+                            ).setAction("Action", null)
+                        }
+                        if (snackBar != null) {
+                            snackBar.show()
+                        }
+
+                    }
+                    is Viewmodel.CurrentEvent.Loading -> {
+                        counteradd.isEnabled= false
+                        counterminus.isEnabled =false
+                    }
+                    else -> Unit
+                }
+            }
+        }
 
         view.counteradd.setOnClickListener {
             if(countertext.text=="0"){
@@ -162,18 +162,18 @@ userId = vm.getUser_id()!!
                     val c: String = view.countertext.text as String
                     view.countertext.text = (c.toInt() - 1).toString()
                 }
-                    vm.removeCartProductById(userId)
+                vm.removeCartProductById(userId)
 
             }
         }
 
 
-view.product_detail_buy_btn.setOnClickListener {
+        view.product_detail_buy_btn.setOnClickListener {
 
-        val cartModel: Cart_Model = Cart_Model(id, model.product_image, model.product_name, model.product_rate, 1)
-        vm.addcart(cartModel,userId)
+            val cartModel: Cart_Model = Cart_Model(id, model.product_image, model.product_name, model.product_rate, 1)
+            vm.addcart(cartModel,userId)
 
-}
+        }
 
 
 

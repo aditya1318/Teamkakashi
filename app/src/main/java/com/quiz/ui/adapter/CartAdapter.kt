@@ -18,17 +18,17 @@ import com.quiz.ui.CartItemClickListener
 
 
 class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val CartItemClickListener:CartItemClickListener):
-    FirestoreRecyclerAdapter<Cart_Model, CartAdapter.ViewHolder>(options)  {
+        FirestoreRecyclerAdapter<Cart_Model, CartAdapter.ViewHolder>(options)  {
 
 
 
 
 
     class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-            var cart_card = itemView.findViewById<MaterialCardView>(R.id.cart_card);
-            var Product_name = itemView.findViewById<TextView>(R.id.cart_pname);
-         //   var Product_price = itemView.findViewById<TextView>(R.id.product_price);
-            var Product_img = itemView.findViewById<ImageView>(R.id.cart_image);
+        var cart_card = itemView.findViewById<MaterialCardView>(R.id.cart_card);
+        var Product_name = itemView.findViewById<TextView>(R.id.cart_pname);
+        //   var Product_price = itemView.findViewById<TextView>(R.id.product_price);
+        var Product_img = itemView.findViewById<ImageView>(R.id.cart_image);
         var add_btn = itemView.findViewById<ImageView>(R.id.Add_btn)
         var minus_btn = itemView.findViewById<ImageView>(R.id.minus_btn)
         var Counter = itemView.findViewById<TextView>(R.id.Counter)
@@ -43,14 +43,14 @@ class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val Cart
         Log.d("Bind:","Mirage");
         val url: String? = model.product_image;
         Glide.with(holder.Product_name.context)
-            .load(url)
-            .placeholder(R.drawable.fui_ic_googleg_color_24dp)
-            .into(holder.Product_img)
+                .load(url)
+                .placeholder(R.drawable.fui_ic_googleg_color_24dp)
+                .into(holder.Product_img)
 
-holder.Counter.text = model.quantity!!.toInt().toString()
+        holder.Counter.text = model.quantity!!.toInt().toString()
 
         holder.Product_name?.text = model.product_name.toString();
-      //  holder.Product_price?.text = model.product_rate.toString();
+        //  holder.Product_price?.text = model.product_rate.toString();
         holder.cart_card
 
         holder.add_btn.setOnClickListener{

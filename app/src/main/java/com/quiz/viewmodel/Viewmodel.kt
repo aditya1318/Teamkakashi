@@ -34,8 +34,8 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
     var resultCode : Int? = null
     val liveDatapaymentmodel= MutableLiveData<Payment_Model>()
 
-private  val _register = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
-val register : StateFlow<CurrentEvent> = _register
+    private  val _register = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
+    val register : StateFlow<CurrentEvent> = _register
 
     private val _Login = MutableStateFlow<CurrentEvent>(CurrentEvent.Empty)
     val Login : StateFlow<CurrentEvent> = _Login
@@ -54,11 +54,11 @@ val register : StateFlow<CurrentEvent> = _register
 
 
 
-    fun addcart(addtocart: Cart_Model) {
+    fun addcart(addtocart: Cart_Model,userID: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.addCartItems(addtocart)
+            repository.addCartItems(addtocart,userID)
         }
 
     }
@@ -76,7 +76,7 @@ val register : StateFlow<CurrentEvent> = _register
                         UserId = response.data!!
                     }
 
-            }
+                }
                 is Resource.Error -> {_register.value = CurrentEvent.Failure(response.msg!!)
 
                 }
@@ -107,10 +107,10 @@ val register : StateFlow<CurrentEvent> = _register
 
 
     }
-    fun getQuantityById(){
+    fun getQuantityById(userID :String){
         _Cart.value =CurrentEvent.Loading
         viewModelScope.launch(IO){
-            when(val response = product_id.value.let { repository.getQuantityById(it!!) }){
+            when(val response = product_id.value.let { repository.getQuantityById(it!!,userID) }){
                 is Resource.Success -> {
                     _Cart.value = CurrentEvent.Success("success")
                     withContext(Main) {
@@ -125,12 +125,12 @@ val register : StateFlow<CurrentEvent> = _register
 
     }
 
-    fun addQuantityById(){
+    fun addQuantityById(userID :String){
 
 
         _Cart.value =CurrentEvent.Loading
         viewModelScope.launch(IO){
-            when(val response = product_id.value.let { repository.addQuantityById(it!!) }){
+            when(val response = product_id.value.let { repository.addQuantityById(it!!,userID) }){
                 is Resource.Success -> {
                     _Cart.value = CurrentEvent.Success("success")
                 }
@@ -141,10 +141,10 @@ val register : StateFlow<CurrentEvent> = _register
 
     }
 
-    fun minusQuantityById(){
+    fun minusQuantityById(userID :String){
         _Cart.value =CurrentEvent.Loading
         viewModelScope.launch(IO){
-            when(val response = product_id.value?.let { repository.minusQuantityById(it) }){
+            when(val response = product_id.value?.let { repository.minusQuantityById(it,userID) }){
                 is Resource.Success -> {
                     _Cart.value = CurrentEvent.Success("success")
                 }
@@ -154,16 +154,16 @@ val register : StateFlow<CurrentEvent> = _register
 
 
     }
-     fun removeCartProductById(){
-         _Cart.value =CurrentEvent.Loading
-         viewModelScope.launch(IO){
-             when(val response = product_id.value?.let { repository.removeCartProductById(it) }){
-                 is Resource.Success -> {
-                     _Cart.value = CurrentEvent.Success("success")
-                 }
-                 is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
-             }
-         }
+    fun removeCartProductById(userID :String){
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response = product_id.value?.let { repository.removeCartProductById(it,userID) }){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
 
     }
 
@@ -188,12 +188,12 @@ val register : StateFlow<CurrentEvent> = _register
 
     fun delete_add(id: String) {
 
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
 
-                repository.delete_add(id)
-            }
-
+            repository.delete_add(id)
         }
+
+    }
 
 
     fun edit_add(id:String, address: Address){
@@ -215,20 +215,51 @@ val register : StateFlow<CurrentEvent> = _register
         this.resultCode = resultCode
     }
 
-     fun payment_detail(){
-         val id =getUser_id()
-         var paymentmodel: Payment_Model? =null
-         viewModelScope.launch(Dispatchers.IO) {
-              paymentmodel=repository.payment_details(id!!)
-             withContext(Main){
-                 liveDatapaymentmodel.value =paymentmodel!!
-             }
+    /*fun payment_detail(){
+        val id =getUser_id()
+        var paymentmodel: Payment_Model? =null
+        viewModelScope.launch(Dispatchers.IO) {
+             paymentmodel=repository.payment_details(id!!)
+            withContext(Main){
+                liveDatapaymentmodel.value =paymentmodel!!
+            }
 
-         }
+        }
+
+
+   }
+     */
+
+    fun addQuantityByIdCart(product_id: String,userID :String){
+
+
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response =  repository.addQuantityById(product_id,userID) ){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
 
 
     }
 
+    fun minusQuantityByIdCart(product_id: String,userID :String){
 
+
+        _Cart.value =CurrentEvent.Loading
+        viewModelScope.launch(IO){
+            when(val response =  repository.minusQuantityById(product_id,userID) ){
+                is Resource.Success -> {
+                    _Cart.value = CurrentEvent.Success("success")
+                }
+                is Resource.Error -> {_Cart.value = CurrentEvent.Failure(response.msg!!)}
+            }
+        }
+
+
+    }
 }
 

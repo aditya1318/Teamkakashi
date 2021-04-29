@@ -18,57 +18,61 @@ class AuthencationRepoImpl: AuthenicationRepo {
     val firebaseFirestore  = FirebaseFirestore.getInstance()
     lateinit var user:String
     override suspend fun AuthenticateRegisterUser(email: String, password: String, name: String): Resource<String> {
-    var result = false
+        var result = false
         var errorString = " "
-       try {
+        try {
 
-          FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                  .addOnCompleteListener(
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(
 
-                          OnCompleteListener<AuthResult> { task ->
-                              // If the registration is successfully done
-                              if (task.isSuccessful) {
-                                  // Firebase registered user
-                                  val firebaseUser: FirebaseUser = task.result!!.user!!
-                                  // Instance of User data model class.
-                                  val user = User(
-                                          firebaseUser.uid,
-                                          name.trim { it <= ' ' },
+                            OnCompleteListener<AuthResult> { task ->
+                                // If the registration is successfully done
+                                if (task.isSuccessful) {
+                                    // Firebase registered user
+                                    val firebaseUser: FirebaseUser = task.result!!.user!!
+                                    // Instance of User data model class.
+                                    val user = User(
+                                            firebaseUser.uid,
+                                            name.trim { it <= ' ' },
 
-                                          email.trim { it <= ' ' }
-                                  )
-                                  this.user =user.id
-                                  result = true
+                                            email.trim { it <= ' ' }
+                                    )
+                                    this.user =user.id
+                                    result = true
 
-                                  // Pass the required values in the constructor.
-                                  //     FirestoreClass().registerUser(this@RegisterActivity, user)
+                                    // Pass the required values in the constructor.
+                                    //     FirestoreClass().registerUser(this@RegisterActivity, user)
 
-                                  try {
-                                      firebaseFirestore.collection("USER")
-                                              .document(user.id).set(user, SetOptions.merge())
-
-
-                                  } catch (e: Exception) {
-                                      Log.d(ContentValues.TAG, "registerUser: e ${e.toString()}")
-                                  }
+                                    try {
+                                        firebaseFirestore.collection("USER")
+                                                .document(user.id).set(user, SetOptions.merge())
 
 
-                              }else{
-                                  errorString =task.exception!!.message!!.toString()
-                              }
-                          }).await();
+                                    } catch (e: Exception) {
+                                        Log.d(ContentValues.TAG, "registerUser: e ${e.toString()}")
+                                    }
+
+
+                                }else{
+                                    errorString =task.exception!!.message!!.toString()
+                                }
+                            }).await();
 
 
 
-                            return if(result)  Resource.Success<String>(user)  else{Resource.Error<String>(errorString)}
-                         }
-         catch(e:Exception){
+            return if(result)  Resource.Success<String>(user)  else{Resource.Error<String>(errorString)}
+        }
+        catch(e:Exception){
 
-                           return  Resource.Error<String>(e.localizedMessage!!)
+            return  Resource.Error<String>(e.localizedMessage!!)
 
 
-      }
+        }
 
+    }
+
+    override fun getUserId(): String {
+        return FirebaseAuth.getInstance().currentUser!!.uid
     }
 
 
