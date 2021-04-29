@@ -14,6 +14,7 @@ import com.quiz.repo.addressRepo.AddressRepoImpl
 import com.quiz.repo.auth.AuthencationRepoImpl
 import com.quiz.repo.auth.LoginRepoImpl
 import com.quiz.util.Contants
+import com.quiz.util.Contants.userID
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -94,10 +95,10 @@ class repository {
 
 
 
-    /* suspend fun payment_details(id: String):Payment_Model{
+  suspend fun payment_details(id: String):Payment_Model{
          var paymentModel:Payment_Model?=null
 
-         firebaseFirestore.collection("USER").document(userID!!)
+         firebaseFirestore.collection("USER").document(id)
 
              .get().addOnSuccessListener {
 
@@ -110,6 +111,6 @@ class repository {
              }.await()
          return paymentModel!!
      }
- */
+
 
 }

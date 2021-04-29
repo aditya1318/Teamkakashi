@@ -237,8 +237,8 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 
 
-    /*fun payment_detail(){
-        val id =getUser_id()
+    fun payment_detail(id : String){
+
         var paymentmodel: Payment_Model? =null
         viewModelScope.launch(Dispatchers.IO) {
              paymentmodel=repository.payment_details(id!!)
@@ -250,7 +250,7 @@ class Viewmodel(application: Application) : AndroidViewModel(application) {
 
 
    }
-     */
+
 
     fun addQuantityByIdCart(product_id: String,userID :String){
 
