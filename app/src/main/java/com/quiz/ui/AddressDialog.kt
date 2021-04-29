@@ -28,6 +28,7 @@ class Address_Dailog : DialogFragment() {
     private var toolbar: Toolbar? = null
     lateinit var vm: Viewmodel
       var a : String? = null
+    lateinit var userId : String
 
     companion object{
     const val TAG = "example_dialog"
@@ -46,6 +47,8 @@ class Address_Dailog : DialogFragment() {
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
+
+        userId = vm.getUser_id()!!
 
 
     }
@@ -105,11 +108,11 @@ class Address_Dailog : DialogFragment() {
 
             if(vm.resultCode != null){
 
-                  vm.edit_add(a!!,address)
+                  vm.edit_add(a!!,address,userId)
 
             }else{
 
-                   vm.add_address(address)
+                   vm.add_address(address,userId)
 
                 }
 

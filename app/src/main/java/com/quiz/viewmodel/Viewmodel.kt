@@ -150,12 +150,12 @@ viewModelScope.launch(Dispatchers.IO) {
 
     }
 
-    fun add_address(address: Address){
+    fun add_address(address: Address,UserId : String){
 
         _add_address.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
-            when(val response  =  repository.add_address(address)){
+            when(val response  =  repository.add_address(address,UserId)){
 
                 is Resource.Success -> {_add_address.value = CurrentEvent.Success("succers")}
                 is Resource.Error ->{_add_address.value = CurrentEvent.Failure(response.msg!!)}
@@ -167,13 +167,13 @@ viewModelScope.launch(Dispatchers.IO) {
 
 
 
-    fun delete_add(id: String) {
+    fun delete_add(id: String,UserId : String) {
 
 
              _delete_add.value = CurrentEvent.Loading
              viewModelScope.launch(Dispatchers.IO) {
 
-             when(val response  =  repository.delete_add(id)){
+             when(val response  =  repository.delete_add(id,UserId)){
 
                 is Resource.Success -> {_delete_add.value = CurrentEvent.Success("succers")}
                 is Resource.Error ->{_delete_add.value = CurrentEvent.Failure(response.msg!!)}
@@ -182,19 +182,17 @@ viewModelScope.launch(Dispatchers.IO) {
     }
 
 
-    fun edit_add(id:String, address: Address){
+    fun edit_add(id:String, address: Address,UserId : String){
 
         _edit_add.value = CurrentEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
-            when(val response  =  repository.edit_add(id,address)){
+            when(val response  =  repository.edit_add(id,address,UserId)){
 
                 is Resource.Success -> {_edit_add.value = CurrentEvent.Success("succers")}
                 is Resource.Error ->{_edit_add.value = CurrentEvent.Failure(response.msg!!)}
             }
         }
-
-
     }
 
     fun edit_dailog(id: String,address: Address, resultCode:Int? ){

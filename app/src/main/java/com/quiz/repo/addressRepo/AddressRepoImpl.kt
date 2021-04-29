@@ -16,12 +16,12 @@ class AddressRepoImpl : AddressRepo {
     val firebaseFirestore  = FirebaseFirestore.getInstance()
     var userID = FirebaseAuth.getInstance().currentUser?.uid
 
-    override suspend fun add_address(address: Address): Resource<Boolean> {
+    override suspend fun add_address(address: Address,UserId : String): Resource<Boolean> {
         var errorMessage = " "
       try {
 
           if (userID != null) {
-              firebaseFirestore.collection("USER").document(userID!!)
+              firebaseFirestore.collection("USER").document(UserId)
                       .collection("address")
                       .document().set(address, SetOptions.merge())
 
@@ -37,26 +37,21 @@ class AddressRepoImpl : AddressRepo {
     }
 
 
-    fun getUser_id(): String? {
-
-        return userID
-    }
 
 
-
-    override suspend fun delete_add(id: String): Resource<Boolean> {
+    override suspend fun delete_add(id: String,UserId : String): Resource<Boolean> {
         var errorMessage = " "
+        Log.d("msg " , "$result")
 
         try {
             if (userID != null) {
-                firebaseFirestore.collection("USER").document(userID!!)
+                firebaseFirestore.collection("USER").document(UserId)
                         .collection("address")
                         .document(id).delete()
 
-                result = true
-
             }
             return if(result) Resource.Success<Boolean>(true) else {Resource.Error<Boolean>(errorMessage)}
+
 
         }catch (E:Exception){
 
@@ -67,16 +62,15 @@ class AddressRepoImpl : AddressRepo {
 
 
 
-    override suspend fun edit_add(id: String ,address: Address): Resource<Boolean> {
+    override suspend fun edit_add(id: String ,address: Address,UserId : String): Resource<Boolean> {
         var errorMessage = " "
 
         try {
 
-            firebaseFirestore.collection("USER").document(userID!!)
+            firebaseFirestore.collection("USER").document(UserId)
                     .collection("address")
                     .document(id).set(address, SetOptions.merge())
 
-            result = true
             return if(result) Resource.Success<Boolean>(true) else {Resource.Error<Boolean>(errorMessage)}
 
            }catch (e:Exception){

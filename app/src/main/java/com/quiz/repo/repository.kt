@@ -117,29 +117,29 @@ class repository {
     }
 
 
-    suspend fun add_address(address: Address): Resource<Boolean> {
+    suspend fun add_address(address: Address,UserId : String): Resource<Boolean> {
 
-        return addressRepoImp.add_address(address)
+        return addressRepoImp.add_address(address,UserId)
 
     }
 
 
-    suspend fun delete_add(id: String): Resource<Boolean> {
+    suspend fun delete_add(id: String,UserId : String): Resource<Boolean> {
 
-        return addressRepoImp.delete_add(id)
+        return addressRepoImp.delete_add(id,UserId)
     }
 
 
-    suspend fun edit_add(id: String, address: Address): Resource<Boolean> {
+    suspend fun edit_add(id: String, address: Address,UserId : String): Resource<Boolean> {
 
-        return addressRepoImp.edit_add(id, address)
+        return addressRepoImp.edit_add(id, address,UserId)
 
     }
 
 
     fun getUser_id(): String? {
 
-        return userID
+        return  authencationImpl.getUserId()
     }
 
     suspend fun payment_details(id: String): Payment_Model {

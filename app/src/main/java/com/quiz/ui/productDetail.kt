@@ -105,35 +105,35 @@ class productDetail : Fragment() {
 
        
 
-        lifecycleScope.launchWhenStarted {
-            vm.Cart.collect { event ->
-                when(event){
-                    is Viewmodel.CurrentEvent.Success -> {
-                        counteradd.isEnabled= true
-                        counterminus.isEnabled =true
-                    }
-                    is Viewmodel.CurrentEvent.Failure ->{
-                        counteradd.isEnabled= true
-                        counterminus.isEnabled =true
-                        val snackBar = view?.let {
-                            Snackbar.make(
-                                    it, event.errorText,
-                                    Snackbar.LENGTH_LONG
-                            ).setAction("Action", null)
-                        }
-                        if (snackBar != null) {
-                            snackBar.show()
-                        }
-
-                    }
-                    is Viewmodel.CurrentEvent.Loading -> {
-counteradd.isEnabled= false
-                        counterminus.isEnabled =false
-                    }
-                    else -> Unit
-                }
-            }
-        }
+//        lifecycleScope.launchWhenStarted {
+//            vm.Cart.collect { event ->
+//                when(event){
+//                    is Viewmodel.CurrentEvent.Success -> {
+//                        counteradd.isEnabled= true
+//                        counterminus.isEnabled =true
+//                    }
+//                    is Viewmodel.CurrentEvent.Failure ->{
+//                        counteradd.isEnabled= true
+//                        counterminus.isEnabled =true
+//                        val snackBar = view?.let {
+//                            Snackbar.make(
+//                                    it, event.errorText,
+//                                    Snackbar.LENGTH_LONG
+//                            ).setAction("Action", null)
+//                        }
+//                        if (snackBar != null) {
+//                            snackBar.show()
+//                        }
+//
+//                    }
+//                    is Viewmodel.CurrentEvent.Loading -> {
+//counteradd.isEnabled= false
+//                        counterminus.isEnabled =false
+//                    }
+//                    else -> Unit
+//                }
+//            }
+//        }
 
         view.counteradd.setOnClickListener {
             if(countertext.text=="0"){
