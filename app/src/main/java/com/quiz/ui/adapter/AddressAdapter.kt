@@ -1,19 +1,22 @@
 package com.quiz.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.FirebaseFirestore
-import com.quiz.repo.Model.Address
 import com.quiz.ecommerce.R
-import com.quiz.ecommerce.address
+import com.quiz.repo.Model.Address
 
-class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onclickdelete : Onclickdelete , private val onclickedit: Onclickedit):FirestoreRecyclerAdapter<Address,AddressAdapter.ViewHolder>(options){
+class AddressAdapter(options: FirestoreRecyclerOptions<Address>, private val Onclickdelete: Onclickdelete, private val onclickedit: Onclickedit):FirestoreRecyclerAdapter<Address, AddressAdapter.ViewHolder>(options){
+
+    var Lastclickposition : Int = -1
+    var SelectedItem : Int = 0
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -22,7 +25,8 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
         var tv_Address = itemView.findViewById<TextView>(R.id.Address)
         var tv_delete = itemView.findViewById<TextView>(R.id.remove)
         var tv_edit = itemView.findViewById<TextView>(R.id.edit)
-
+        var star = itemView.findViewById<ImageView>(R.id.star)
+        var card = itemView.findViewById<CardView>(R.id.Card)
     }
 
 
@@ -36,6 +40,15 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Address) {
 
+
+        if(Lastclickposition == position){
+            holder.star.isVisible = true
+
+        }else{
+            holder.star.isVisible = false
+        }
+
+
         val add : String = model.homeno+" ,"+ model.address+" "+ model.landmark+" "+ model.zipCode
 
         holder.tv_Address.text = add ;
@@ -45,6 +58,15 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
                 .document().collection("address")
                 .document().get()
 */
+
+        holder.card.setOnClickListener {
+            val previousItem: Int = SelectedItem
+            Lastclickposition = position
+
+            notifyDataSetChanged()
+
+
+        }
 
         val id : String = snapshots.getSnapshot(position).reference.id
 
@@ -58,7 +80,7 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
 
         holder.tv_edit.setOnClickListener {
 
-            onclickedit.Onclick2(id,model)
+            onclickedit.Onclick2(id, model)
         }
 
     }
@@ -69,13 +91,13 @@ class AddressAdapter (options: FirestoreRecyclerOptions<Address>,private val Onc
 
  interface Onclickdelete {
 
-     fun Onclick(id:String)
+     fun Onclick(id: String)
 
  }
 
 interface  Onclickedit{
 
 
-    fun Onclick2(id: String,address: Address)
+    fun Onclick2(id: String, address: Address)
 
 }
