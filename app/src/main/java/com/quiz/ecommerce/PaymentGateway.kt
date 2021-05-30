@@ -1,35 +1,43 @@
 package com.quiz.ecommerce
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.quiz.repo.Model.Cart_Model
-import com.quiz.repo.Model.Product_model
+import com.quiz.repo.Model.*
 import com.quiz.ui.adapter.CartAdapter
 import com.quiz.ui.adapter.CartpaymentAdapter
+import com.quiz.ui.adapter.OnclickAddress
 import com.quiz.ui.adapter.ProductAdapter
+import com.quiz.viewmodel.PaymentGatewayViewModel
 import com.quiz.viewmodel.Viewmodel
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
+import kotlinx.android.synthetic.main.activity_payment_gateway.*
 import kotlinx.android.synthetic.main.fragment_address2.*
 import kotlinx.android.synthetic.main.fragment_address2.view.*
+import kotlinx.coroutines.flow.collect
 import org.json.JSONException
 import org.json.JSONObject
 import java.security.Provider
+import java.util.ArrayList
 
-class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
+class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener {
 
         lateinit var payment_rate : String
         lateinit var  adapter : CartpaymentAdapter
@@ -37,8 +45,14 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
         lateinit var phone_number: String
         lateinit var user_email : String
         lateinit var merchant_name : String
-        lateinit var viewmodel: Viewmodel
+         val viewmodel: Viewmodel by viewModels()
+         val paymentGatewayViewModel: PaymentGatewayViewModel by viewModels()
         lateinit var id: String
+        lateinit var deliveryAddressCard:TextView
+        lateinit var amount:String
+         var price :Long =0
+        var RoundAmount:Int?=null
+    var  cartlist = ArrayList<Cart_Model>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,33 +60,63 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
 
 
         rc_cart = findViewById(R.id.rc_paymentCart)
+         deliveryAddressCard = findViewById(R.id.Address)
+
+        intent.extras?.let {
+            val address = it.get("address") as Address
+            Address.text = address.address
+        }
 
 
-        viewmodel = this?.let {
-            ViewModelProviders.of(it)[Viewmodel::class.java]
 
-        } ?: throw Exception("Activity is null")
+
+
+
+
 
             id = viewmodel.getUser_id()!!
         setUpRecyclerView()
 
 
+
         viewmodel.payment_detail(id)
+
+
 
 
         viewmodel.liveDatapaymentmodel.observe(this, Observer {
             merchant_name = it.user_name!!
             user_email = it.user_email!!
             phone_number = it.user_phonenumber!!
+            Log.d(TAG, "onCreate: ${it.toString()}")
+
         })
 
 
+        viewmodel.getTotalPrice(id)
+lifecycleScope.launchWhenStarted {
+    viewmodel.getTotalPrice(id).collect {
+        amount = it.toInt().toString()
+        price= it
+        Log.d(TAG, "onCreate: ${amount}")
+        price_textview.text= amount.toString()
+    }
+}
 
-        var amount:String = "1000"
 
+lifecycleScope.launchWhenStarted {
+    viewmodel.CartAmountEventFlow.collect{event ->
+        when(event){
+            is Viewmodel.CurrentEvent.Success<*>->{
+                viewmodel.getTotalPrice(id)
+            }
+            is Viewmodel.CurrentEvent.Failure -> {
 
-        var RoundAmount = Math.round(amount.toFloat() * 100)
+            }
 
+        }
+    }
+}
 
         findViewById<CardView>(R.id.pay_card).setOnClickListener {
             Checkout.preload(this)
@@ -104,13 +148,36 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
 
 
     override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-        Toast.makeText(this,"Payment Success"+p0, Toast.LENGTH_LONG).show()
+        lifecycleScope.launchWhenStarted {
+             paymentGatewayViewModel.getCartList(id).collect {
+                cartlist = it as ArrayList<Cart_Model>
+                 val order = p1?.let { OrderDetail(it.paymentId,cartlist,price,"Card","Placed order",true) }
+                 if (order != null) {
+                     viewmodel.addPaymentHistory(id, order)
+                 }
+             }
+            }
+             viewmodel.removeCart(id)
+
+
+        Toast.makeText(this,"Payment Success"+RoundAmount, Toast.LENGTH_LONG).show()
+
+
     }
 
 
 
     override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-        Toast.makeText(this,"Failed"+p1, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Failed" + p1, Toast.LENGTH_LONG).show()
+        lifecycleScope.launchWhenStarted {
+            paymentGatewayViewModel.getCartList(id).collect {
+                cartlist = it as ArrayList<Cart_Model>
+                val order = p2?.let { OrderDetail(it.paymentId, cartlist, price, "Card", null, false) }
+                if (order != null) {
+                    viewmodel.addPaymentHistory(id, order)
+                }
+            }
+        }
     }
 
 
@@ -134,6 +201,7 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
     override fun onStart() {
         super.onStart()
         adapter.startListening();
+       
     }
 
     override fun onStop() {
@@ -141,4 +209,8 @@ class PaymentGateway : AppCompatActivity() , PaymentResultWithDataListener{
         adapter.stopListening()
     }
 
+
+companion object{
+    const val TAG = "PaymentGateway"
+}
 }

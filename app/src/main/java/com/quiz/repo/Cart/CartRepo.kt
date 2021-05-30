@@ -6,6 +6,8 @@ import com.quiz.util.Resource
 interface CartRepo {
     suspend fun addCartItems(addToCart: Cart_Model,userID:String):Resource<Boolean>;
 
+    suspend fun getCartList(userID:String):Resource<List<Cart_Model>>;
+
     suspend fun getQuantityById(id: String,userID:String): Resource<Long>
 
     suspend fun addQuantityById(id: String,userID:String):Resource<Boolean>
@@ -13,6 +15,8 @@ interface CartRepo {
     suspend fun minusQuantityById(id: String,userID:String):Resource<Boolean>
 
     suspend fun removeCartProductById(id: String,userID:String):Resource<Boolean>
+
+    suspend fun removeCart(userID:String):Resource<Boolean>
 
 
     }

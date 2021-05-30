@@ -7,64 +7,87 @@ import com.quiz.repo.Model.Cart_Model
 import com.quiz.repo.repository
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
+import java.util.ArrayList
 
 class CartRepoImpl() :CartRepo{
 
 
     override suspend fun addCartItems(addToCart: Cart_Model,userID:String): Resource<Boolean> {
-        var result =false
-        var errorMsg =""
-         val firebaseFirestore  = FirebaseFirestore.getInstance().collection("USER").document(userID)
-                .collection("Cart");
-        firebaseFirestore.document().set(addToCart, SetOptions.merge()).addOnSuccessListener {
 
-            result =true
+        return try {
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
+            firebaseFirestore.document().set(addToCart, SetOptions.merge()).addOnSuccessListener {
 
-        }.addOnFailureListener{exception ->
 
-            errorMsg = if(exception.localizedMessage ==null){
-                "Unexpected error occur"
-            }else ({
-                errorMsg = exception.message!!.toString()
-            }).toString()
+            }.await()
+            Resource.Success(null)
+        }catch (e:Exception)
+        {
+            Resource.Error(e.message!!)
+        }
 
-        }.await()
+    }
 
-        return if(result) Resource.Success(null) else Resource.Error(errorMsg)
+    override suspend fun getCartList(userID: String): Resource<List<Cart_Model>> {
+        try {
+            var cartList = ArrayList<Cart_Model>()
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
+
+            firebaseFirestore.get().addOnSuccessListener {
+                for (Cart_model in it){
+
+
+                    val car = it.toObjects(Cart_Model::class.java)
+                    cartList = car as ArrayList<Cart_Model>
+                }
+            }.await()
+            Log.d("cartRepo", "getCartList: ${cartList}")
+            return  Resource.Success(cartList)
+        }catch (e:Exception)
+        {
+            Log.d("cartRepo", "getCartList: ${e.message}")
+            return    Resource.Error(e.message!!)
+
+        }
     }
 
     override suspend fun getQuantityById(id: String,userID:String): Resource<Long> {
-        var result =false
-        var errorMsg =""
+
         var data :Long? =null
-        val firebaseFirestore  = FirebaseFirestore.getInstance().collection("USER").document(userID)
-                .collection("Cart");
-                firebaseFirestore.whereEqualTo("product_id", id)
-                .get().addOnSuccessListener { it ->
-                    it.forEach { i ->
-                     data = i.get("quantity") as Long?
-                        Log.d("aaditya", "getQuantityById: ")
-                    }
-                            if (data==null){
-                                data=0
-                            }
-                            result= true
-                }.addOnFailureListener {
-                 errorMsg = ({errorMsg = it.message.toString()}).toString()
+        try {
 
-                }.await()
 
-        return if(result) Resource.Success(data!!) else Resource.Error(errorMsg)
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
+            firebaseFirestore.whereEqualTo("product_id", id)
+                    .get().addOnSuccessListener { it ->
+                        it.forEach { i ->
+                            data = i.get("quantity") as Long?
+                            Log.d("aaditya", "getQuantityById: ")
+                        }
+                        if (data == null) {
+                            data = 0
+                        }
+                    }.await()
+
+            return Resource.Success(data!!)
+        }catch (e:Exception){
+            return Resource.Error(e.message!!)
+        }
     }
 
     override suspend fun addQuantityById(id: String,userID:String): Resource<Boolean> {
-        var result =false
-        var errorMsg =""
-        var data: Long?
-        val firebaseFirestore  = FirebaseFirestore.getInstance().collection("USER").document(userID)
-                .collection("Cart");
 
-        firebaseFirestore.whereEqualTo("product_id", id)
+        var data: Long?
+        try {
+
+
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
+
+            firebaseFirestore.whereEqualTo("product_id", id)
                     .get().addOnSuccessListener {
 
                         it.forEach { i ->
@@ -72,21 +95,23 @@ class CartRepoImpl() :CartRepo{
                             val num: Int = data!!.toInt() + 1
                             i.reference.update("quantity", num)
                         }
-                        result= true
-                    }.addOnFailureListener{
-
-                        errorMsg = ({errorMsg = it.message.toString()}).toString()
                     }.await()
 
-        return if(result) Resource.Success(null) else Resource.Error(errorMsg)
+
+                        return Resource.Success(null)
+        }catch (e:Exception){
+            return Resource.Error(e.message!!)
+        }
     }
 
     override suspend fun minusQuantityById(id: String,userID:String): Resource<Boolean> {
         var count: Long? = null;
-        var result =false
-        var errorMsg =""
-        val firebaseFirestore  = FirebaseFirestore.getInstance().collection("USER").document(userID)
-                .collection("Cart");
+
+        try {
+
+
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
 
             firebaseFirestore.whereEqualTo("product_id", id)
                     .get().addOnSuccessListener {
@@ -94,47 +119,61 @@ class CartRepoImpl() :CartRepo{
                         it.forEach { i ->
                             count = i.get("quantity") as Long?
                             val num: Int = count!!.toInt() - 1
+
                             if (count!! > 1) {
-                                result = true
                                 i.reference.update("quantity", num)
-                            }else{
+                            } else {
                                 firebaseFirestore.whereEqualTo("product_id", id)
                                         .get().addOnSuccessListener {
                                             it.forEach { i ->
                                                 firebaseFirestore.document(i.reference.id).delete()
-                                                        .addOnSuccessListener {
-                                                            result =true
-                                                        }.addOnFailureListener {
-                                                            result =false
-                                                            errorMsg = ({errorMsg = it.message.toString()}).toString()
-                                                        }
+
                                             }
                                         }
                             }
                         }
 
-                    }.addOnFailureListener{
-                        errorMsg = ({errorMsg = it.message.toString()}).toString()
                     }.await()
-        return if(result) Resource.Success(null) else Resource.Error(errorMsg)
+            return  Resource.Success(null)
+        }catch (e:Exception){
+            return Resource.Error(e.message!!)
+        }
     }
 
     override suspend fun removeCartProductById(id: String,userID:String): Resource<Boolean> {
-        var errorMsg =""
-        var result =false
-        val firebaseFirestore  = FirebaseFirestore.getInstance().collection("USER").document(userID)
-                .collection("Cart");
+
+
+        return try{
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
             firebaseFirestore.whereEqualTo("product_id", id)
                     .get().addOnSuccessListener {
                         it.forEach { i ->
                             firebaseFirestore.document(i.reference.id).delete()
-                                    .addOnSuccessListener {
-                            result =true
-                                    }.addOnFailureListener {
-                                        errorMsg = ({errorMsg = it.message.toString()}).toString()
-                                    }
+
                         }
                     }.await()
-        return if(result) Resource.Success(null) else Resource.Error(errorMsg)
+            Resource.Success(null)
+        }catch (e:Exception){
+            Resource.Error(e.message!!)
+        }
     }
+
+    override suspend fun removeCart(userID: String): Resource<Boolean> {
+        try {
+            val firebaseFirestore = FirebaseFirestore.getInstance().collection("USER").document(userID)
+                    .collection("Cart");
+            firebaseFirestore.get().addOnSuccessListener { it ->
+                it.forEach { id ->
+                    firebaseFirestore.document(id.reference.toString()).delete()
+                }
+            }
+            return Resource.Success(null)
+        }catch (e:Exception){
+
+return Resource.Error(e.message!!)
+        }
+
+    }
+
 }

@@ -18,7 +18,7 @@ object CommonUtils {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
             val height = ViewGroup.LayoutParams.MATCH_PARENT
 
-            it.getWindow()?.setLayout(width, height)
+            it.window?.setLayout(width, height)
             it.setCancelable(false)
             it.setCanceledOnTouchOutside(true)
             return it

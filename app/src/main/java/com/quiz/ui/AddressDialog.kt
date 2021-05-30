@@ -82,9 +82,9 @@ class Address_Dailog : DialogFragment() {
 
 
         lifecycleScope.launchWhenStarted {
-            vm.add_address.collect {event ->
+            vm.addressEventFlow.collect {event ->
                 when(event){
-                    is Viewmodel.CurrentEvent.Success -> {
+                    is Viewmodel.CurrentEvent.Success<*> -> {
                     }
                     is Viewmodel.CurrentEvent.Failure -> {
                         Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()

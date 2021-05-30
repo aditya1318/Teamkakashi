@@ -1,11 +1,15 @@
 package com.quiz.repo.Model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 
-@Parcelize
+
+@Entity
 data class User(
+        @PrimaryKey
         val id: String = "",
         val firstName: String = "",
         val email: String = "",
@@ -14,6 +18,6 @@ data class User(
         val profileCompleted: Int = 0
 
 
-) : Parcelable
+)
 
 

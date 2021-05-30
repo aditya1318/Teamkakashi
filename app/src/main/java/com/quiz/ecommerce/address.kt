@@ -3,6 +3,8 @@ package com.quiz.ecommerce
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +14,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.quiz.ecommerce.ui.Address_Dailog
 import com.quiz.repo.Model.Address
 import com.quiz.ui.adapter.AddressAdapter
+import com.quiz.ui.adapter.OnclickAddress
 import com.quiz.ui.adapter.Onclickdelete
 import com.quiz.ui.adapter.Onclickedit
 import com.quiz.viewmodel.Viewmodel
@@ -29,13 +33,14 @@ import org.json.JSONException
 import org.json.JSONObject
 
 
-class address : Fragment() , Onclickdelete ,Onclickedit{
+class address : Fragment() , Onclickdelete ,Onclickedit,OnclickAddress{
 
    // private val TAG: String = address::class.java.getSimpleName()
     private lateinit var adapter: AddressAdapter;
     lateinit var recyclerView: RecyclerView
     lateinit var vm: Viewmodel
     lateinit var userId:String
+    lateinit var deliveryAddress:Address
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +62,12 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
         view.paypal.setOnClickListener {
-           val intent = Intent(activity,PaymentGateway::class.java)
-            startActivity(intent)
+            vm.getDeliveryAddress().value?.let {
+                val intent = Intent(activity,PaymentGateway::class.java)
+                intent.putExtra("address",vm.getDeliveryAddress().value as Parcelable)
+                startActivity(intent)
+            }?:Snackbar.make(it,"Please select the address first",Snackbar.LENGTH_LONG).show()
+
         }
 
 
@@ -93,7 +102,7 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
                 .build();
 
 
-        adapter = AddressAdapter(options, this, this)
+        adapter = AddressAdapter(options, this, this,this)
 
 //    recyclerView.setAdapter(adapter);
 
@@ -125,17 +134,11 @@ class address : Fragment() , Onclickdelete ,Onclickedit{
         openDialog()
     }
 
+    override fun onClickAddress(address: Address) {
+      vm.setDeliveryAddress(address)
+    }
 
-    /* override fun onPaymentSuccess(p0: String?) {
-         val builder = AlertDialog.Builder(activity)
-         builder.setTitle("Payment Id")
-         builder.setMessage(p0)
-         builder.show()
-     }
 
-     override fun onPaymentError(p0: Int, p1: String?) {
-         Toast.makeText(activity, p1, Toast.LENGTH_LONG).show()
-     }*/
 
 
 }

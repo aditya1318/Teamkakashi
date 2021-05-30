@@ -81,6 +81,7 @@ class productDetail : Fragment() {
                 product_detail_buy_btn.visibility = View.VISIBLE
                 product_detail_buy_btn.isEnabled = true
 
+
             }
         })
 
@@ -110,9 +111,9 @@ class productDetail : Fragment() {
 
 
         lifecycleScope.launchWhenStarted {
-            vm.Cart.collect { event ->
+            vm.cartEventFlow.collect { event ->
                 when(event){
-                    is Viewmodel.CurrentEvent.Success -> {
+                    is Viewmodel.CurrentEvent.Success<*> -> {
                         counteradd.isEnabled= true
                         counterminus.isEnabled =true
                     }
@@ -180,9 +181,10 @@ class productDetail : Fragment() {
 
 
         view.product_detail_buy_btn.setOnClickListener {
-
+view.product_detail_buy_btn.isEnabled = false
             val cartModel: Cart_Model = Cart_Model(id, model.product_image, model.product_name, model.product_rate, 1)
             vm.addcart(cartModel,userId)
+            vm.getQuantityById(userId)
 
         }
 

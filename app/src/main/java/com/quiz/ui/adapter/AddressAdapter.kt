@@ -13,10 +13,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.quiz.ecommerce.R
 import com.quiz.repo.Model.Address
 
-class AddressAdapter(options: FirestoreRecyclerOptions<Address>, private val Onclickdelete: Onclickdelete, private val onclickedit: Onclickedit):FirestoreRecyclerAdapter<Address, AddressAdapter.ViewHolder>(options){
+class AddressAdapter(options: FirestoreRecyclerOptions<Address>, private val Onclickdelete: Onclickdelete, private val onclickedit: Onclickedit,private val OnclickAddress:OnclickAddress):FirestoreRecyclerAdapter<Address, AddressAdapter.ViewHolder>(options){
 
     var Lastclickposition : Int = -1
-    var SelectedItem : Int = 0
+
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -41,10 +41,9 @@ class AddressAdapter(options: FirestoreRecyclerOptions<Address>, private val Onc
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Address) {
 
 
-        if(Lastclickposition == position){
+      if(Lastclickposition == position){
             holder.star.isVisible = true
-
-        }else{
+        }else {
             holder.star.isVisible = false
         }
 
@@ -53,19 +52,14 @@ class AddressAdapter(options: FirestoreRecyclerOptions<Address>, private val Onc
 
         holder.tv_Address.text = add ;
 
-/*
-        FirebaseFirestore.getInstance().collection("USER")
-                .document().collection("address")
-                .document().get()
-*/
 
         holder.card.setOnClickListener {
-            val previousItem: Int = SelectedItem
-            Lastclickposition = position
+
+Lastclickposition = position
 
             notifyDataSetChanged()
 
-
+OnclickAddress.onClickAddress(model)
         }
 
         val id : String = snapshots.getSnapshot(position).reference.id
@@ -100,4 +94,8 @@ interface  Onclickedit{
 
     fun Onclick2(id: String, address: Address)
 
+}
+
+interface  OnclickAddress{
+    fun onClickAddress(address: Address)
 }

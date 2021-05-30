@@ -43,10 +43,12 @@
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_register_to_login"
-            app:destination="@id/login" />
+            app:destination="@id/login"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_register_to_startPage"
-            app:destination="@id/startPage" />
+            app:destination="@id/startPage"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -61,7 +63,8 @@
             app:destination="@id/register" />
         <action
             android:id="@+id/action_login_to_startPage"
-            app:destination="@id/startPage" />
+            app:destination="@id/startPage"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/startPage"
@@ -70,10 +73,12 @@
         tools:layout="@layout/fragment_start_page" >
         <action
             android:id="@+id/action_startPage_to_login"
-            app:destination="@id/login" />
+            app:destination="@id/login"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_startPage_to_register"
-            app:destination="@id/register" />
+            app:destination="@id/register"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/productDetail"
@@ -90,6 +95,11 @@
         <action
             android:id="@+id/action_SettingFragment_to_payment_history"
             app:destination="@id/payment_history" />
+        <action
+            android:id="@+id/action_SettingFragment_to_startPage"
+            app:destination="@id/startPage"
+            app:popUpTo="@id/startPage"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/address"

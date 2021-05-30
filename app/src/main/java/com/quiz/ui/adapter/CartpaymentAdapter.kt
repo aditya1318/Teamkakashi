@@ -31,6 +31,7 @@ class CartpaymentAdapter(options: FirestoreRecyclerOptions<Cart_Model>): Firesto
         //   var Product_price = itemView.findViewById<TextView>(R.id.product_price);
         var Product_img = itemView.findViewById<ImageView>(R.id.cart_image);
         var add_btn = itemView.findViewById<ImageView>(R.id.Add_btn)
+        var Counter = itemView.findViewById<TextView>(R.id.Counter)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -43,10 +44,10 @@ class CartpaymentAdapter(options: FirestoreRecyclerOptions<Cart_Model>): Firesto
         val url: String? = model.product_image;
         Glide.with(holder.Product_name.context)
                 .load(url)
-                .placeholder(R.drawable.fui_ic_googleg_color_24dp)
+                .placeholder(R.drawable.ic_baseline_add_24)
                 .into(holder.Product_img)
 
-
+        holder.Counter.text = model.quantity!!.toInt().toString()
 
         holder.Product_name?.text = model.product_name.toString();
         //  holder.Product_price?.text = model.product_rate.toString();

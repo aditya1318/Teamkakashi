@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/SignText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -31,7 +31,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField"
+        android:id="@+id/nameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -41,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8">
+        app:layout_constraintTop_toBottomOf="@+id/SignText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_email"
@@ -53,7 +53,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
 
-        android:id="@+id/textInputLayout5"
+        android:id="@+id/emailField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -61,7 +61,7 @@
         android:layout_marginEnd="50dp"
         android:hint="Password"
         app:endIconMode="password_toggle"
-        app:layout_constraintTop_toBottomOf="@+id/textField"
+        app:layout_constraintTop_toBottomOf="@+id/nameField"
         tools:layout_editor_absoluteX="50dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -83,7 +83,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/emailField" />
 
 
     <TextView

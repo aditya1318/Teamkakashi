@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.quiz.repo.Model.User
-import com.quiz.util.Contants
+
 import com.quiz.util.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -17,7 +17,7 @@ class AuthencationRepoImpl: AuthenicationRepo {
 
     val firebaseFirestore  = FirebaseFirestore.getInstance()
     lateinit var user:String
-    override suspend fun AuthenticateRegisterUser(email: String, password: String, name: String): Resource<String> {
+    override suspend fun AuthenticateRegisterUser(email: String, password: String, name: String,number:String): Resource<String> {
         var result = false
         var errorString = " "
         try {
@@ -34,8 +34,8 @@ class AuthencationRepoImpl: AuthenicationRepo {
                                     val user = User(
                                             firebaseUser.uid,
                                             name.trim { it <= ' ' },
-
-                                            email.trim { it <= ' ' }
+                                            email.trim { it <= ' ' },
+                                            number.trim{it <= ' '}
                                     )
                                     this.user =user.id
                                     result = true

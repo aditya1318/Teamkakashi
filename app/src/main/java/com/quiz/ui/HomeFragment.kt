@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStarted
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +24,9 @@ import com.quiz.repo.Model.Product_model
 import com.quiz.ProductClickListener
 import com.quiz.ui.adapter.ProductAdapter
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.User
 import com.quiz.viewmodel.Viewmodel
+import kotlinx.coroutines.flow.collect
 
 
 class HomeFragment : Fragment(), ProductClickListener {
@@ -31,12 +35,17 @@ class HomeFragment : Fragment(), ProductClickListener {
     private lateinit var adapter: ProductAdapter;
     lateinit var recyclerView: RecyclerView
     lateinit var vm: Viewmodel
+    lateinit var UserID:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
+UserID =vm.getUser_id()!!
+
+
+
 
     }
 
@@ -57,17 +66,10 @@ class HomeFragment : Fragment(), ProductClickListener {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-    /*    db.collection("Products")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        Log.d(TAG, "${document.id} => ${document.data}")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting documents: ", exception)
-                }*/
+
         recyclerView = view.findViewById<RecyclerView>(R.id.Rcview1)
+
+
 
         return view;
     }
@@ -80,7 +82,6 @@ class HomeFragment : Fragment(), ProductClickListener {
                 .build();
         adapter = ProductAdapter(options, this)
 
-   //  recyclerView.setAdapter(adapter);
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = adapter;
 

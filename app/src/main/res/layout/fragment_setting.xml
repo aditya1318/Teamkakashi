@@ -54,22 +54,23 @@
             android:background="@drawable/imgback">
 
             <ImageView
+                android:id="@+id/UserPhoto"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/fui_ic_facebook_white_22dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/carttext"
+                android:id="@+id/UserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="32dp"
-                android:text="Mirage Thakore"
+
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -77,16 +78,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/UserEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="mthakoe12@gmial.com"
+
                 android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/carttext" />
+                app:layout_constraintTop_toBottomOf="@+id/UserName" />
 
 
             <ImageView

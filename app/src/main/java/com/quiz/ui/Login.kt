@@ -1,7 +1,6 @@
 package com.quiz.ui
 
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
@@ -19,13 +17,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.quiz.ecommerce.R
+import com.quiz.repo.Model.User
 import com.quiz.util.CommonUtils
 import com.quiz.viewmodel.Viewmodel
 import kotlinx.android.synthetic.main.fragment_start_page.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.lang.Exception
-import java.security.Provider
 
 
 class Login : Fragment() {
@@ -33,6 +32,8 @@ class Login : Fragment() {
     lateinit var et_password: TextInputEditText;
     lateinit var vm :Viewmodel
     private var loading: Dialog? = null
+    lateinit var UserID:String
+    private  val  firebase = FirebaseAuth.getInstance();
 
 
 
@@ -50,25 +51,60 @@ class Login : Fragment() {
 
         view.findViewById<Button>(R.id.StartpageLoginBtn).setOnClickListener {
             logInRegisteredUser(it)
+
         }
-        lifecycleScope.launchWhenStarted {
-            vm.Login.collect {event ->
+       val job=  lifecycleScope.launchWhenStarted {
+            vm.loginEventFlow.collect { event ->
+
              when(event){
-                 is Viewmodel.CurrentEvent.Success -> {hideLoading()
-                     view.findNavController().navigate(R.id.homeFragment)
-                     }
+                 is Viewmodel.CurrentEvent.Success<*> -> {
+
+                     UserID = vm.getUser_id()!!
+                     vm.getUserDataRemote(UserID)
+
+                     Log.d(TAG, "onCreateView: ${vm.getUserDataRemote(UserID)}")
+                 }
                  is Viewmodel.CurrentEvent.Failure -> {hideLoading()
                      Snackbar.make(view,event.errorText,Snackbar.LENGTH_LONG).show()
                      StartpageLoginBtn.isEnabled = true
 
                  }
-                 is Viewmodel.CurrentEvent.Loading ->{showLoading()
+                 is Viewmodel.CurrentEvent.Loading ->{
+                        showLoading()
                      StartpageLoginBtn.isEnabled = false
                  }
                  else -> Unit
              }
             }
+
         }
+
+
+lifecycleScope.launch {
+    vm.profileEventFlow.collect { event ->
+        when (event) {
+
+            is Viewmodel.CurrentEvent.Success<*> -> {
+                Log.d(TAG, "onCreateView: ${event}")
+                try {
+                    vm.InsertUserData(event.result as User)
+                    hideLoading()
+                    Log.d("login", "onCreateView: ${event.result as User}")
+                    view.findNavController().navigate(R.id.homeFragment)
+                } catch (e: Exception) {
+                    Log.d("logimn", "onCreateView: ${e.message}")
+                }
+
+            }
+            is Viewmodel.CurrentEvent.Failure -> {
+                Log.d("login", "onCreateView: error")
+                firebase.signOut()
+            }
+            else ->{Log.d(TAG, "onCreateView: else")}
+        }
+
+    }
+}
 
         view.findViewById<TextView>(R.id.SignupBtn).setOnClickListener {
             it.findNavController().navigate(R.id.action_login_to_register)
@@ -88,6 +124,8 @@ class Login : Fragment() {
         vm = activity?.let {
             ViewModelProviders.of(it)[Viewmodel::class.java]
         } ?: throw Exception("Activity is null")
+
+
 
     }
 
@@ -133,6 +171,9 @@ class Login : Fragment() {
     private fun showLoading(){
         hideLoading()
         loading = context?.let { CommonUtils.showLoadingDialog(it) }
+    }
+    companion object{
+        const val TAG = "LoginPage"
     }
 
 

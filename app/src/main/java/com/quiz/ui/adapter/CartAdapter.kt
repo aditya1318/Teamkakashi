@@ -57,7 +57,9 @@ class CartAdapter(options: FirestoreRecyclerOptions<Cart_Model>,private val Cart
             CartItemClickListener.onCartAddClick(model)
         }
 
-
+        holder.minus_btn.setOnClickListener{
+            CartItemClickListener.onCartMinusClick(model)
+        }
 
 
 

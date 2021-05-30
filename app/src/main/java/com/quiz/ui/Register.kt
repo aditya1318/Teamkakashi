@@ -47,15 +47,16 @@ class Register : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-
+val btn = view.findViewById<Button>(R.id.SignUpBtn)
 
         view.findViewById<Button>(R.id.SignUpBtn).setOnClickListener {
             registerUser()
+            it.isEnabled =false
         }
         lifecycleScope.launchWhenStarted {
-            vm.register.collect { event ->
+            vm.registerEventFlow.collect { event ->
                 when(event){
-                    is Viewmodel.CurrentEvent.Success ->{
+                    is Viewmodel.CurrentEvent.Success<*> ->{
                         withContext(Main) {
                             view.findNavController().navigate(R.id.action_register_to_login)
                         }
@@ -70,6 +71,7 @@ class Register : Fragment() {
                         if (snackBar != null) {
                             snackBar.show()
                         }
+                        btn.isEnabled = true
 
                     }
                     is Viewmodel.CurrentEvent.Loading -> {
@@ -160,7 +162,7 @@ class Register : Fragment() {
 
         // Check with validate function if the entries are valid or not.
         if (validateRegisterDetails()) {
-           vm.AuthenticateRegisterUser(Email.text.toString(),et_name.text.toString(),password.text.toString())
+           vm.AuthenticateRegisterUser(Email.text.toString(),et_name.text.toString(),password.text.toString(),phoneNumber.text.toString())
 
         }
     }
